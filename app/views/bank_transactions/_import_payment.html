@@ -1,0 +1,151 @@
+<div class="row-fluid">
+	<div class="span6">
+		<h3 class="heading">Import Payments</h3>
+	</div>
+	
+	<div class="span5">
+		<%= link_to "Bank Transactions", banktransactions_path, :remote => true %>
+	</div>
+	
+	<div class="clear"></div>	
+	
+	<div class="span9">
+		<%= form_tag import_payment_banktransactions_path, :class => "well form-inline import-payment-form", :multipart => true  do %>
+			Bank | Site:
+			<%= select_tag "bank_id", options_for_select(@banks_select, params[:bank_id]) %>
+			File:
+			<%= file_field_tag "file" %>
+			
+			<button type="submit" class="btn btn-gebo">Import</button>
+		<% end %>
+	</div>
+</div>
+
+<% unless @error_message.nil? %>
+	<div class="alert alert-error">
+	  <%= @error_message %>
+	</div>
+<% end %>
+
+<div class="row-fluid">
+	<% unless @payment_amt_details.empty? %>
+
+
+	<table class="table table-bordered mediaTable" id="orders-list">
+		<thead>
+			<tr>
+				<th>Payment Amount</th>
+				<th class="">Details</th>
+				<th class="">Possible Order ID(s)</th>
+				<th class="">Possible First & Last Names</th>
+				<th class="">Updated?</th>
+			</tr>
+		</thead>
+
+		<tbody>
+
+			<%
+	    i = 0
+	    puts @payment_amt_details.count
+	    while (i < @payment_amt_details.count)
+	      cclass = cycle("even", "odd")
+	      puts "iii= #{i}"
+	      puts "----> #{@status_updated.inspect}"
+	      puts "**** _> #{@status_updated[i+1].inspect}"
+	      
+	      #logger.info("tr class : @possible_orders[i+1] == " + @possible_orders[i+1].inspect + " && @payment_amt_details[i + 2] == " + @payment_amt_details[i + 2].inspect + " && @status_updated[i+1].join(",").include?(Not Updated - *)" + @status_updated[i+1].join(",").include?("Not Updated").inspect)
+
+	      status_updated = @status_updated[i + 1].nil? ? [] : @status_updated[i+1]
+	      puts @possible_order_ids[i].inspect
+			%>
+	          <tr class="<%= cclass %>" style="<%= ((@possible_orders[i+1] == [] || (@payment_amt_details[i + 2] != nil && status_updated.join(",").include?("Not Updated - *")) ) && (status_updated.join(",").include?("==> Updated") == false))? "background-color:#FFFFCC;" : "" %>">
+	          	<td><%= @payment_amt_details[i] %></td>
+							<td style="padding-left:10px; padding-right:10px;"><%= @payment_amt_details[i + 1] %></td>
+							<td style="padding-left:10px; padding-right:10px;">
+								<% pos_order_ids = @possible_order_ids[i+1].nil? ? [] : @possible_order_ids[i+1] %>
+								<%#= pos_order_ids.join(",") %>
+								<%= (pos_order_ids == [] && status_updated != []) ? (status_updated.collect {|s| s.split("#")[1].split(",")[0]}).join(",") : "" %>
+
+							
+								
+								
+								</td>
+							<td style="padding-left:10px; padding-right:10px;"><%= @possible_first_last_names[i+1].inspect %></td>
+							<% if (@payment_amt_details[i + 2] != nil) %>
+								<td><%= (status_updated != [])? status_updated.join("<br />").html_safe : "Order Not Found: No Order ID In Payment Details." %></td>
+							<% else %>
+            		<td>Payment may have been inserted in an earlier file. Please Check.</td>
+							<% end %>
+						</tr>
+	
+						<% if (status_updated == [] && @payment_amt_details[i + 2] != nil) %>
+	          <tr class="<%= cclass %>" style="<%= (@possible_orders[i+1] == [])? "background-color:#FFFFCC;" : "" %>">
+	          	<td colspan="5" >
+	          		<center>
+	                <table style="width:98%; margin-left:10px; font-style:italic; color:#FF5252; border: solid 0px #FF5252; margin:1px;">
+								    <tr>
+								  	  <td colspan="5" <%= (@possible_orders[i+1] != [])? "style='text-decoration:underline;'" : "" %>>
+								  	  	<strong><%= (@possible_orders[i+1] != [])? "Unpaid Orders With The Same Total Amount / Name" : "No Unpaid Orders With The Same Total / Name Found." %></strong>
+								  	  </td>
+									  </tr>
+										<% pos_orders = @possible_orders[i+1].nil? ? [] : @possible_orders[i+1] %>
+										<% pos_orders.each do |ord| %>
+		                  <tr style=" ">
+		              	    <td style="padding-left:5px; "><strong>Order ID:</strong> <%= ord.orderid %></td>
+										    <td style="padding-left:10px; padding-right: 10px; "><strong>Total Inc. Tax:</strong> <%= ord.total_inc_tax %></td>
+										    <td style=""><strong>Bill to:</strong> <%= ord.ordbillfirstname + " " + ord.ordbilllastname %>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Translated: <strong/><%= BankTransaction.hira_to_kata(ord.ordbillfirstname) %></td>
+										    <td style="">
+										  	  <div style="float:left; margin-top:2px;">
+										  	  	<button type="button" class="btn btn-gebo mark_order_as_paid_bt" style="height: 25px !important" title="Click to Mark Order as Paid" id="<%= ord.orderid %>" alt="<%= ord.orderid %>_<%= @payment_amt_details[i + 2] %>">Mark as Paid &raquo; </button>
+		                      </div>
+										    </td>
+											  <td style=" " id='mark_order_as_paid_cell_<%= ord.orderid.to_s %>'>&nbsp;</td>
+		                  </tr>
+										<% end %>
+										
+	                </table>
+								</center>
+							</td>
+						</tr>
+						<% end %>
+	          
+			<% i += 3
+	    end %>
+
+			
+		</tbody>
+	</table>	
+
+
+
+	
+	
+	
+	
+
+	<% end %>
+</div>
+
+<script>
+$(function() {
+	$(".import-payment-form").submit(function(){
+		var site = $(".import-payment-form #bank_id option:selected").text();
+		var ans = confirm("Are you sure you want to upload this file to " + site);
+		if (ans)
+			return true;
+		else
+			return false;
+	})
+	
+	$(".mark_order_as_paid_bt").click(function () {
+	  var oid_btid = $(this).attr("alt").split("_");                                                                                    
+	  var order_id = oid_btid[0];                                                                                                        
+	  var bank_trxn_id = "";                                                                                                            
+	  if (oid_btid.length > 1) {
+	      bank_trxn_id = oid_btid[1];
+	  }                                                                                                                                  
+	  var response = $("#mark_order_as_paid_cell_" + order_id);
+	  response.load("/orders/mark_order_as_paid?order_id=" + order_id + "&btid=" + bank_trxn_id);                                 
+	});	
+})	
+</script>

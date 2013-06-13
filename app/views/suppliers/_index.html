@@ -1,0 +1,22 @@
+<div class="row-fluid">
+	<div class="span6">
+		<h3 class="heading">Suppliers list</h3>
+	</div>	
+
+	<table class="table table-striped table-bordered mediaTable" id="sites-list">
+		<thead>
+			<tr>
+				<th class="essential persist">Name </th>
+				<th class="essential persist">Description</th>
+				<th class="essential">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @suppliers.each do |supp| %>
+				<%= render supp %>
+			<% end %>
+		</tbody>
+	</table>
+
+  <%= will_paginate @suppliers, :class => "dataTables_paginate paging_bootstrap pagination" %>
+</div>

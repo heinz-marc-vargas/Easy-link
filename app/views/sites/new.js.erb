@@ -1,0 +1,9 @@
+OC.clearForms();
+
+if ($("#addsite-form").length == 0) {
+	$(".main_content").prepend('<%= escape_javascript(render(:partial => '/sites/new'))%>');
+  $("#addsite-form").slideDown(300).delay(800).fadeIn(400);	
+}else{
+	$("#addsite-form").slideDown(300).delay(800).fadeIn(400);
+}	
+

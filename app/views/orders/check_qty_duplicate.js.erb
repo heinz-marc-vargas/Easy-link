@@ -1,0 +1,3 @@
+OC.clearForms();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/orders/check_qty_duplicate"))%>');
+$('#date').datepicker();

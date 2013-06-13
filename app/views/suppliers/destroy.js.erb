@@ -1,0 +1,2 @@
+$("#supplier-row-<%= @supplier.id %>").fadeOut(500);
+$.sticky("<%= t(:supplier) %> <%= t(:successfully_deleted) %>.", {autoclose : 5000, position: "top-right", type: "st-success" });

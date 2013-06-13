@@ -1,0 +1,4 @@
+id = "<%=@order['increment_id'] %>";
+$("#order-loader-" + id).hide();
+$("#order-row-details-" + id).show();
+$("#order-content-" + id).empty().hide().append('<%= escape_javascript(render(:partial => '/magento_orders/orderdetails')) %>').slideDown();

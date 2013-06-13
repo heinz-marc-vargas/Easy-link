@@ -1,0 +1,22 @@
+<tr id="order-row-<%= order['increment_id']%>">
+	<td><%= check_box_tag "order_id[]", order['increment_id'] %>
+	</td>
+	<td><%= order['increment_id'] %></td>
+	<td><%= order['customer_firstname'] rescue "N/A" %> <%= order['customer_lastname'] rescue "N/A" %></td>
+	<td><%= order['customer_email'] %></td>
+	<td><%= order['created_at'] rescue "N/A" %></td>
+	<td title="<%= get_oc_status(order['status']) %>"><%= get_oc_status(order['status']) %></td>
+	<td><%= commify(order['grand_total'].to_f.to_s) %></td>
+	<td style="width: 65px">
+		<a href="javascript:void(0)" class="mg-show-order-details" data-id="<%= order['increment_id'] %>" title="Order Details"><i class="splashy-view_outline_detail"></i></a>
+		<a href="javascript:void(0)" class="mg-show-billing-details" data-id="<%= order['increment_id'] %>" title="Billing Details"><i class="splashy-view_thumbnail"></i></a>
+		<a href="javascript:void(0)" class="mg-show-shipping-details" data-id="<%= order['increment_id'] %>" title="Shipping Details"><i class="splashy-map"></i></a>
+		<%= span_loader("order-loader-#{order['increment_id']}") %>
+	</td>
+</tr>
+
+<tr id="order-row-details-<%= order['increment_id']%>" class="hide" style="border-right: none !important;" align="center">
+	<td colspan="9" style="background-color: none; padding: 0px 10px 10px 10px !important; border:0px; border-left: none !important; border-right-width: 0px !important; border-right-style: none !important;" align="center">
+		<div id="order-content-<%= order['increment_id'] %>" class="subtable-container"  ></div>
+	</td>
+</tr>

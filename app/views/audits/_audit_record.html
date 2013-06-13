@@ -1,0 +1,8 @@
+      <tr id="audit-row-<%#= audit_record.id%>">
+        <td><%= audit_record.action.upcase %></td>
+        <td><%= audit_record.auditable_type %></td>
+        <td><%= audit_record.auditable_id.to_s %>&nbsp;&nbsp;&nbsp;<%= link_to "<span class='splashy-zoom'></span>".html_safe, "#", :id => (audit_record.id.to_s + "_" + audit_record.auditable_type + "_" + audit_record.auditable_id.to_s), :class => "show_audit_detail" %></td>
+        <td><%= audit_record.user_id %></td>
+        <td><%= audit_record.user_type %></td>
+        <td><%= audit_record.created_at.to_s %></td>
+      </tr>

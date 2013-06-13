@@ -1,0 +1,29 @@
+<% unless @lowstock_products.empty? %>
+	<h4>Low Stock Products:</h4>
+	<table>
+		<tr style="border-bottom:solid 1px black;">
+			<td><strong>SKU</strong></td>
+			<td style="padding-left:10px; padding-right:10px;"><strong>Product Name</strong></td>
+			<td nowrap="nowrap"><strong>Stock Qty</strong></td>
+			<td nowrap="nowrap"><strong>Threshold Qty</strong></td>
+			<td>Comments</td>
+		</tr>
+			
+		<% @lowstock_products.each do |prod| %>
+	    <tr id="product-line-<%= prod.ext_product_id %>">
+	    	<td><%= prod.ext_product_id %></td>
+				<td style="padding-left:10px; padding-right:10px;"><%= prod.name %></td>
+				<td  align="right"><%= prod.stock %></td>
+				<td  align="center"><%= prod.restock_threshold %></td>
+				<td>
+					<span id="show-note-form" data-area="lowstock" class="btn-<%= prod.ext_product_id %>" data-id="<%= prod.ext_product_id %>">
+				  	<a href="" onclick="return false;"  title="Add a Note"><i class="splashy-comment"></i></a> 
+				  </span>
+				  <%= span_loader2(prod.ext_product_id) %>
+				  <div id="lowstocknote-<%= prod.ext_product_id %>" style="float: left; position: absolute; z-index: 150; margin-top: -12px;"></div>
+				</td>
+			</tr>
+ 	 <% end %>
+
+	</table>
+<% end %>

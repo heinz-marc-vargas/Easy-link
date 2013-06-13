@@ -1,0 +1,125 @@
+ <div class="row-fluid">
+  <div class="span6">
+    <h3 class="heading">List Unmatched Payments (<%= @date.to_date.strftime("%B, %Y") %>)</h3>
+  </div>
+  
+  <div class="clear"></div> 
+  
+  <div class="span9">
+    <%= form_tag list_unmatched_payments_accounts_path, :class => "well form-inline unmatched-payments-search-form" do %>
+      Year-Month:
+      <%= select_tag "yr_month", options_for_select(@available_yr_mths, params[:yr_month]), :class => "span2"%>
+      <button type="submit" class="btn btn-success">Search</button>
+      
+      <div style="float:right;">
+        <%= link_to "Show All Unmatched Payments", "?show_all=y" %><br/>
+        <%= link_to "Hide Invisible Unmatched Payments", "?show_all=n" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+ 
+<div class="row-fluid">
+  <%= @unmatched_payments.count %> unmatched payments found. <%= @unmatched_payments.collect { |pm| pm.order_id.to_i } %>
+  <table class="table table-bordered mediaTable" id="unmatched-payments-list">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th class="">Card Type</th>
+        <th class="">Order Payment Status</th>
+        <th class="">Payment Date</th>
+        <th>Mark Invisible</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+ <%
+   if (@unmatched_payments.empty?)
+ %>
+      <tr><td colspan="4" style="text-align: center;"><strong>No Unmatched Payments.</strong></td></tr>
+<%
+  else
+	@unmatched_payments.each do |pm|
+	  card_type = ""
+	  case pm.cc
+	    when "3"
+	      card_type = "MASTERCARD"
+	    when "1"
+	      card_type = "VISA"
+	    when "125"
+	      card_type = "JCB"
+	    else
+	      card_type = "Unknown"
+	  end
+%>
+	  <tr id="<%= "row_" + pm.id.to_s %>" <%= (!pm.is_visible)? "style=background-color:LightGrey;" : "" %>>
+        <td>
+          <button type="button" class="btn btn-mini" style="margin-top:-9px;" id="sm_gc_trxn_id_<%= pm.id %>">Save & Set As Paid</button>
+          <%= text_field_tag ("order_id_" + pm.id.to_s), pm.order_id, :style => "width: 85px", :class => "sm_gc_trxn_order_id", "data-id" => pm.id %>
+          <span id="result_<%= pm.id %>"></span>
+        </td>
+        <td class=""><%= card_type %></td>
+        <td class=""><%= SmGcTransaction.format_form_response(pm).html_safe %><%= SmGcTransaction.format_order_status_response(pm).html_safe %><%= SmGcTransaction.format_cancel_response(pm).html_safe %></td>
+        <td class=""><%= pm.date_time %></td>
+        <td class="">
+<%
+          if (pm.is_visible)
+%>
+            <%= check_box_tag ("cb_" + pm.id.to_s), (!pm.is_visible), false, :class => "cb" %> 
+<%
+          else
+%>
+            <%= check_box_tag ("cb_" + pm.id.to_s), (pm.is_visible), true, :class => "cb" %> 
+<%
+          end
+%>
+          <span id="<%= "visibility_saved_" + pm.id.to_s %>"></span>
+        </td>
+        <td class="">
+          <%= form_tag("", :id => ("notes_form_" + pm.id.to_s), :class => "notes_form") do %>
+          <%= text_area_tag ("note_" + pm.id.to_s), pm.notes, :name => "notes", :class => "notes" %>
+          <%#= image_tag "../img/gCons/save.png", :alt => "Save", :id => ("save_note_" + pm.id.to_s), :class => "save_note" %>
+          <input type="hidden" name="pmid" id="<%= ("pmid" + pm.id.to_s) %>" value="<%= pm.id.to_s %>" />
+          <input type="submit" value="" id="<%=("save_note_" + pm.id.to_s) %>" class="save_note" style="background-image: url(../img/gCons/save.png); background-position:  0px 0px; background-repeat: no-repeat; width:30px; height:30px; border: 0px;" />
+          <div id="<%= "notes_saved_" + pm.id.to_s %>"></div>
+          <%  end %>
+        </td>
+      </tr>
+<%
+	end
+end
+%>
+    </tbody>
+  </table>
+
+</div>
+
+<script>
+$(function(){
+  $(".btn-mini").click(function(){
+    var $sm_gc_trxn_id = $(this).attr("id").split('_')[4];
+    var $oid = $("#order_id_" + $sm_gc_trxn_id).val();
+    var $Response = $("#result_" + $sm_gc_trxn_id);
+    $("#loader").show();
+    //alert($sm_gc_trxn_id + ", " + "save_mark_as_paid?sm_gc_trxn_id=" + $sm_gc_trxn_id + "&oid=" + $oid);
+    $Response.load("save_mark_as_paid?sm_gc_trxn_id=" + $sm_gc_trxn_id + "&oid=" + $oid);
+    $("#loader").hide();
+  });
+  
+  $(".cb").change(function() {
+    var $sm_gc_trxn_id = $(this).attr("id").split('_')[1];
+    var $invisibility = $("#cb_" + $sm_gc_trxn_id).is(':checked');
+    var $Response = $("#visibility_saved_" + $sm_gc_trxn_id);
+    if ($invisibility == true) {
+      $("#row_" + $sm_gc_trxn_id).css("background-color", "LightGrey");
+    }
+    else {
+      $("#row_" + $sm_gc_trxn_id).css("background-color", "white");
+    }
+    $("#loader").show();
+    //alert("save_visibility?pmid=" + $sm_gc_trxn_id + "&invisibility=" + $invisibility);
+    $Response.load("save_visibility?pmid=" + $sm_gc_trxn_id + "&invisibility=" + $invisibility);
+    $("#loader").hide();
+  });
+})
+</script>

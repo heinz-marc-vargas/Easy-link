@@ -1,0 +1,6 @@
+$.sticky("Order status updated.", {autoclose : 5000, position: "top-right", type: "st-success" });
+$.get("<%= orders_path(:site_id => params[:site_id], :page => params[:page], :status => params[:status], :format => :js) %>");
+
+<% @orders.each do |order| %>
+ $("#order-row-<%= order.orderid %>").fadeOut();
+<% end %>

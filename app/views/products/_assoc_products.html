@@ -1,0 +1,20 @@
+<tr style="padding: 0px; height: 0px !important;">
+	<td colspan="5" style="padding: 0px; margin: 0px; border-left: none; border-right: none !important; height: 0px !important; background-color: #75A3D1"></td>
+</tr>
+<% products.each do |prod| %>
+<tr id="<%= prod.id%>" class="supplier-product-row">
+	<td style="border: 1px solid #75A3D1 "><%= prod.name %> - <%= prod.uid %></td>
+	<td style="border: 1px solid #75A3D1 "><%= prod.ext_product_id %></td>
+	<td style="border: 1px solid #75A3D1 "><%= prod.supplier.company_name %></td>
+	<td style="border: 1px solid #75A3D1 "><%= prod.stock.to_i rescue 0 %></td>
+	<td style="border: 1px solid #75A3D1 "><%= prod.restock_threshold.to_i rescue 0 %>
+		<div style="float: right" class="supplier-product-edit-link" id="<%= prod.id %>">
+		<%= link_to "Edit", edit_product_path(prod, :from => action_name), :remote => true, :title => "Edit" %>
+		</div>
+	</td>
+</tr>
+<% end %>
+<tr style="padding-bottom: 20px;">
+	<td colspan="5" style="border-left: none; border-right: none !important; height: 20px"></td>
+</tr>
+

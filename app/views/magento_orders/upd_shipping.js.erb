@@ -1,0 +1,7 @@
+$("#temp-content").empty();
+// update order address info
+id = "<%= @order['increment_id'] %>";
+$("#order-header-"+ id + " .street_info").text("<%= @order['shipping_address']['street'] %>").fadeOut().fadeIn();
+$("#order-header-"+ id + " .city_info").text("<%= @order['shipping_address']['city'] %>").fadeOut().fadeIn();
+$("#order-header-"+ id + " .state_info").text("<%= @order['shipping_address']['region'] %>").fadeOut().fadeIn();
+$("#order-header-"+ id + " .zip_info").text("<%= @order['shipping_address']['postcode'] %>").fadeOut().fadeIn();

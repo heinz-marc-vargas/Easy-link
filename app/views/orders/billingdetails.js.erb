@@ -1,0 +1,5 @@
+id = "<%=@isc_order.orderid %>";
+$("#order-loader-" + id).hide();
+$("#order-row-details-" + id).show();
+$("#order-content-" + id).empty().hide().append('<%= escape_javascript(render(:partial => '/orders/billingdetails')) %>').slideDown();
+$(".billing-details-div img").attr("height", 15);

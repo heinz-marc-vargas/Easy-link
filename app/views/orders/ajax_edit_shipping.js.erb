@@ -1,0 +1,5 @@
+$("#temp-content").empty().hide();
+id = "<%=@order.orderid %>";
+$("#edit_address_loader-" + id).hide();
+$("#temp-content").append('<%= escape_javascript(render(:partial => '/orders/edit_shipping')) %>').fadeIn();
+

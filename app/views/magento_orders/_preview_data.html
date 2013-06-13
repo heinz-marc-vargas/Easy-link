@@ -1,0 +1,112 @@
+<div class="modal-header">
+  <button class="close" data-dismiss="modal">×</button>
+  <h3 class="white"><%= t('orders.preview_supplier_data') %> - <%= @site.sitename %></h3>
+</div>
+
+
+<%= form_tag send_to_queue_magento_orders_path, :remote => true, :id => "form-queue", :class => "hide" do %>
+<% end %>
+
+
+<%# cache("#{@site.id}-preview_supplier_order_data", :expires_in => 2.hours ) do %>
+
+<div class="modal-body">
+	<div id="temp-content" ></div>
+	
+	<%= "No available orders." if @orders.empty? %>
+
+	<% unless @orders.empty? %>
+	<div id="accordion2" class="accordion">
+		<% @orders.keys.each do |order_id| %>
+		  <%
+		  order_processings = @orders[order_id]
+		  next if order_processings.empty? 
+		  main_unsent = order_processings.select{|op| op.sent == nil && op.parent_order_id == nil}
+		  next if main_unsent.empty?
+		  order = order_processings.first.isc_order
+		  %>
+		  
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				
+					<table class="table table-condensed table-striped smalltable" data-rowlink="a" id="order-header-<%= order_id %>">
+					<tr onmouseover="$('.mage-edit-address-<%= order_id%>').show();" onmouseout="$('.mage-edit-address-<%= order_id%>').hide();" style="background-color: #DFF0FF"> 
+	            <td width="10">
+	            	<%= check_box_tag "chk_orderid[]", order_id, nil, :class => "order-row-chk" %>
+	            	<a href="#collapseOne<%= order_id %>" data-parent="#accordion1" data-toggle="collapse" class="acc-in">
+	            		<i class="splashy-arrow_state_grey_expanded"></i>
+	            	</a>
+	            </td>
+	            <td width="40" style="background-color: none !important">
+	            		<strong><%= t('orders.order_id') %>:</strong><br/><%= order_id %>
+	            </td>
+	            <td width="45" ><strong>Date: </strong><br/><%#= Time.at(order.orddate).strftime("%m-%d-%Y") %></td>
+	            <td width="125" ><strong>First name: </strong><br/><%= order.shipping_address['firstname'] rescue '' %></td>
+	            <td width="125" ><strong>Last name: </strong><br/><%= order.shipping_address['lastname'] rescue '' %></td>
+	            <td width="175"><strong>Street: </strong><br/>
+	            	<span class='street_info'><%= order.shipping_address['street'] rescue 'N/A' %> </span></td>
+	            <td width="100"><strong>City: </strong><br/>
+	            	<span class='city_info'><%= order.shipping_address['city'] rescue '' %></span></td>
+	            <td width="60"><strong>State: </strong><br/>
+	            	<span class='state_info'><%= order.shipping_address['region'] rescue 'x' %></span></td>
+	            <td width="50"><strong>Zip:</strong><br/> 
+	            	<span class='zip_info'><%= order.shipping_address['postcode'] rescue '' %></span></td>
+	            <td width="20" >
+	            	<%= span_loader2("mage_edit_address_loader-#{order_id}") %>
+	            	<div class="hide mage-edit-address mage-edit-address-<%= order_id %> ttip_t" oldtitle="Edit Shipping Address" data-id="<%= order_id%>">
+	            		<i class="splashy-map"></i>Edit
+	            	</div>
+	            </td>
+	        </tr>
+	       </table>
+      	
+			</div>
+			<div class="accordion-body in collapse" id="collapseOne<%= order_id %>" style="height: auto; ">
+				<div class="accordion-inner">
+			      <table class="table smalltable" data-rowlink="a" id="table-<%= order_id %>">
+			              <tr>
+			                  <th width="130">SKU</th>
+			                  <th width="150">Supplier Product Name</th>
+			                  <th width="150">Site Product Name</th>
+			                  <th width="90"  style="text-align:center">Supplier Qty</th>
+			                  <th width="10%"  style="text-align:center">Split Qty</th>
+			                  <th width="10%">Current Shipper</th>
+			              </tr>
+			          <tbody class="table-<%= order_id %>-tbody">
+			          	  <% main_unsent.each do |ordproc| %>
+			          	  	<% unless ordproc.get_suppliers(session[:site_id]).empty? %>
+			          	  	
+				              	<%= render :partial => "order_processing", :locals => { :ordproc => ordproc  } %>
+				              	<% ordproc.suborders.each do |sub_op| %>
+				              		<% unless ordproc.supplier_id.nil? %>
+				              			<%= render :partial => "order_processing", :locals => { :ordproc => sub_op  } %>
+				              		<% end %>
+				              	<% end %>
+				              
+				              <% end %>
+			              <% end %>
+			          </tbody>
+			      </table>
+		    </div>
+			</div>
+		</div>
+		<% end %>
+	</div>
+	<% end %>
+
+	
+</div>
+
+<%# end %><!-- end of cache -->
+
+<div class="modal-footer">
+	<div class="pull-left">
+	<%= check_box_tag "chk-order-all", nil, nil, :class => "" %> Check all
+	</div>
+	
+	<% unless @orders.empty? %>
+	<%= span_loader2("loader_queue") %>
+	<button type="button" class="btn btn-gebo btn_send_to_queue" >Send to Queue</button>
+	<% end %>
+   <a href="javascript:void(0)" class="btn" data-dismiss="modal" id="btn-close-supplier-order-preview">Close</a>
+</div>

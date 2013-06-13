@@ -1,0 +1,94 @@
+<div class="row-fluid">
+	<div class="span6">
+		<h3 class="heading">Bank Transactions</h3>
+	</div>
+	
+	<div class="span5">
+		<%= link_to "Import Payment (.csv)", import_payment_banktransactions_path, :remote => true %>
+	</div>
+	
+	<div class="clear"></div>	
+	
+	<div class="span9">
+		<%= form_tag banktransactions_path, :class => "well form-inline bank-transaction-search-form", :method => :get, :remote => true do %>
+			<%= hidden_field_tag "per_page", params[:per_page] %>
+			Year-Month:
+			<%= select_tag "yr_month", options_for_select(@yr_month_select, params[:yr_month]), :class => "span2"%>
+			Bank:
+			<%= select_tag "bank_id", options_for_select(@banks_select, params[:bank_id]) %>
+			<button type="submit" class="btn btn-success">Search</button>
+		<% end %>
+	</div>
+</div>
+
+<div class="row-fluid">
+
+<% unless @transactions.empty? %>
+	<%= form_for(:bank_transactions, :url => set_sequence_banktransactions_path(:page => params[:page]), :remote => true, :html=> {:class=>"", :id => "sequence_form"}) do |f| %>
+		<%= hidden_field_tag "bank_id", params[:bank_id] %>
+		<%= hidden_field_tag "yr_month", params[:yr_month] %>
+
+		<div class="pull-left input-append span12" style="padding-left: 0px !important">	
+			<button type="button" class="btn btn-info btn-mini" onclick="OC.exportBankTransaction('<%= params[:yr_month] %>','<%= params[:bank_id]%>');" style="margin-bottom: 5px; margin-left: -20px !important">Export to xls</button>
+			<select name="per_page" class="perpage-bank-transactions" style="width: 130px">
+				<option value="">Display per page</option>
+				<option value="10" <%= params[:per_page].to_i == 10 ? "selected" : '' %>>10 per page</option>
+				<option value="50" <%= params[:per_page].to_i == 50 ? "selected" : '' %>>50 per page</option>
+				<option value="100" <%= params[:per_page].to_i == 100 ? "selected" : '' %>>100 per page</option>
+				<option value="500" <%= params[:per_page].to_i == 500 ? "selected" : '' %>>500 per page</option>
+			</select>
+			
+			<div class="pull-right" style="margin-right: 30px">
+				<%= will_paginate @transactions, :class => "dataTables_paginate paging_bootstrap pagination bottom_pagination" %>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+		<table class="table table-bordered mediaTable" id="orders-list">
+			<thead>
+				<tr>
+					<th>Sequence No.</th>
+					<th class="">Order ID</th>
+					<th class="">Trans. Date</th>
+					<th class="">Trans. Amount</th>
+					<th class="">Balance <%= (params[:bank_id].to_i == 2)? "(N/A)" : "" %></th>
+					<th class="">Customer Notes</th>
+					<th class="">File Name</th>
+					<th class="">Status Updated On</th>
+					<th class="">Balance Tally <%= (params[:bank_id].to_i == 2)? "(N/A)" : "" %></th>
+					<th class="">Payment Tally <%= (params[:bank_id].to_i == 2)? "(N/A)" : "" %></th>
+					<% if session[:site_code].to_s == Constant::KX_CODE %>
+					<th>Other Sales Channel</th>
+					<% end %> 
+					<th class="">Staff Comment</th>
+				</tr>
+			</thead>
+			<tbody>
+				<%= render :partial => "bank_transaction", :collection => @transactions %>
+			</tbody>
+		</table>
+		
+		<div class="clear"></div>
+		<%= will_paginate @transactions, :class => "dataTables_paginate paging_bootstrap pagination bottom_pagination" %>
+	
+		<br/><br/>
+		<button type="submit" class="btn btn-gebo">» Update Sequence</button>
+	
+	<% end %>
+	
+	LEGEND: <br/>
+	<span class="" style="background-color: #FFFFCC;">&nbsp;&nbsp;&nbsp;&nbsp;</span> No Order IDs and Amount is greater than zero(0)<br/>
+	<span class="" style="background-color: #CECECE;">&nbsp;&nbsp;&nbsp;&nbsp;</span> No Order IDs and Amount is negative
+
+<% end %>
+
+</div>
+
+<script>
+$(function(){
+  $(".bank-transaction-search-form").submit(function(){
+  	$("#loader").show();
+  });  
+
+})
+</script>

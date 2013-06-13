@@ -1,0 +1,174 @@
+<%#= render("breadcrumbs", :status => "Pending") %>
+
+<div class="row-fluid">
+	<div class="span4">
+		<h4 class="heading">Import Shipping Numbers</h4>
+	</div>
+	<%= render("sublinks") %>
+	
+	<!--
+	<div class="span4">
+		<a href="#" onclick="OC.showShippingNotifications(); return false;"><i class="icon-th"></i>Shipping Notifications</a>
+	</div>
+	-->
+</div>
+
+<% unless @errors.nil? %>
+	<div class="alert alert-error">
+	  	<%= @errors %>
+	</div>
+<% end %>
+
+
+
+<div class="row-fluid">
+	<%= form_for :isc_shipment_data, :url => imports_orders_path, :html => { :id => "fileupload", :multipart => true, :remote => true } do |f|%>
+	  <label>
+	  	<strong>SV</strong> - for Sava <br/>
+	  	<strong>WM</strong> - for Westmead <br/>
+	  	<strong>* The date in the file name should be the ship date.</strong><br/><br/>
+	  	
+	  	E.g.: <strong>SV_2012-12-25.xls</strong> 
+			<%= space_pipe(3) %>
+	  	<strong>SV_2012-12-25_a.xls</strong>
+			<%= space_pipe(3) %>
+	  	<strong>SV_2012-12-25_BK.xls</strong><br/><br/>
+	  	<table>
+	  	  <tr>
+	  	    <td style="text-decoration: underline; padding-right: 40px;"><strong>SAVA File Content Format</strong></td>
+	  	    <td style="text-decoration: underline;"><strong>Westmead File Content Format</strong></td>
+	  	  </tr>
+	  	  <tr>
+	  	    <td style="padding-right: 40px;">
+	  	      - Data starts on row 2<br/>
+	  	      - Order ID in column C<br/>
+	  	      - SKU in column N<br/>
+            - Qty in column T<br/>
+            - Tracking number in column Y<br/>
+            - Ship date in column Z
+	  	    </td>
+	  	    <td  style="vertical-align: top;">
+	  	      - Data starts on row 8<br/>
+	  	      - Order ID in column B<br/>
+            - SKU in column O<br/>
+            - Qty in column P<br/>
+            - Tracking number in column M
+	  	    </td>
+	  	  </tr>
+	  	</table>
+	 </label>
+	  <%= f.file_field :file_name %>
+	  <%= submit_tag "Upload", :class => "btn btn-gebo small-btn fileupload-btn" %>
+	<% end %>
+</div>
+
+<h4>Pending Files</h4>
+<% if @pending_tracking_files.empty? %>
+	<span class="label">No Pending files...</span>
+	<br/><br/>
+<% else %>
+
+  <table  class="table table-bordered mediaTable" id="orders-list">
+    <thead>
+      <tr>
+        <th>Filename</th>
+        <th>Status</th>
+        <th># rows processed</th>
+        <th>Uploader</th>
+        <th>File size</th>
+        <th>Possible Error(s)</th>
+      </tr>
+    </thead>
+    <tbody>
+		<% @pending_tracking_files.each do |tfile| %>
+			<%
+			filesize = ""
+			thefile = Rails.root.join("data", "shipping_files", tfile.filename)
+			if File.exists? thefile
+				filesize = number_to_human_size(thefile.size)
+			end
+			
+			%>
+      <tr>
+        <td><%= tfile.filename %></td>
+        <td>
+        	<% if tfile.status == "Pending" %>
+        		<span class="label"><%= tfile.status %></span>
+        	<% elsif tfile.status == "Processing" %>
+        		<span class="label label-info"><%= tfile.status %></span>
+        	<% elsif tfile.status == "Failed" %>
+        		<span class="label label-warning"><%= tfile.status %></span>
+        	<% end %>
+        
+        	</td>
+        <td><%= tfile.processed_counter %></td>
+        <td><%= tfile.uploader.first_name %></td>
+        <td><%= filesize %></td>
+        <td title="<%= h tfile.logs %>" style="font-size: 9px"><%= truncate(tfile.logs, :length => 80, :omission => "...") %></td>
+      </tr>
+		<%  end %>
+    </tbody>
+  </table>
+<% end %>
+
+ 
+  <br/>
+
+	<h4>Uploaded Files</h4>
+  <table  class="table table-bordered mediaTable" id="orders-list">
+    <thead>
+      <tr>
+        <th>Filename</th>
+        <th>Date Uploaded</th>
+        <th>Uploader</th>
+        <th>File size</th>
+      </tr>
+    </thead>
+    <tbody>
+		<% @shipment_files.each do |file| %>
+			<% tf = TrackingFile.where("filename=?", file.file_name)
+
+				uploader = nil
+			  unless tf.empty?
+			  	uploader = tf.first.uploader
+			  end
+
+			filesize = ""
+			thefile = Rails.root.join("data", "shipping_files", file.file_name)
+			if File.exists? thefile
+				filesize = number_to_human_size(thefile.size)
+			end
+			  
+			%>
+      <tr>
+        <td>
+        	<% if current_user.administrator? %>
+						<%= link_to file.file_name, download_import_orders_path(:isd => file.id), :target => "_blank" %> -
+					<% else %>
+						<%= file.file_name %> -
+					<% end %>
+					<% check_icon = raw("<i class=\"icon-eye-open\"></i>") %>
+					<%= link_to raw("#{check_icon} Check orders"), check_shipping_xls_orders_path(:isd => file.id), :target => "_blank" %>
+        </td>
+        <td><%= format_date(file.created_at, "MdY-time") %></td>
+        <td><%= uploader.first_name unless uploader.nil? %></td>
+        <td><%= filesize %></td>
+      </tr>
+		<%  end %>
+    </tbody>
+  </table>
+
+
+<script>
+	$(function() {
+		$(".order-summary-search-form").submit(function(){
+			$("#loader").show();
+		})
+
+    $(".fileupload-btn").click(function(){
+      $(this).val("Uploading...");
+      $(this).attr("disabled", "disabled");
+      $("#fileupload").submit();
+    })
+	})
+</script>

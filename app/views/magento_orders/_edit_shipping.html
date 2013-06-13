@@ -1,0 +1,49 @@
+		<%= form_tag upd_shipping_magento_orders_path(:id => @order['increment_id']), :remote => true, :class => "bs-docs-example form-horizontal upd-shipping-address"  do %>
+		<%= hidden_field_tag :order_address_id, @order['shipping_address']['address_id'] %>
+				
+		<div  style="">    
+			<div class="w-box-header">
+				Update Shipping Address
+				
+				<div class="pull-right">
+					
+					<a href="javascript:void(0)" class="close close-shipping-address">×</a>
+				</div>
+			</div>
+			<div class="w-box-content cnt_a">
+				<div class="sepH_b">
+					<label for="w_name">Address</label>
+					<%= text_field_tag :street, @order['shipping_address']['street'], :class => "span4", :placeholder => "Street..." %>
+				</div>
+				<div class="sepH_b">
+					<label for="w_name">City</label>
+					<%= text_field_tag :city, @order['shipping_address']['city'], :class => "span4", :placeholder => "City" %>
+				</div>
+				<div class="sepH_b">
+					<label for="w_name">State</label>
+					<%= text_field_tag :state, @order['shipping_address']['region'], :class => "span4", :placeholder => "State" %>
+				</div>
+				<div class="sepH_b">
+					<label for="w_name">Zip</label>
+					<%= text_field_tag :zip, @order['shipping_address']['postcode'], :class => "span4", :placeholder => "Zip Code" %>
+				</div>
+				<div class="sepH_b formSep">
+					<label for="w_name">Country</label>
+					<%= @order['shipping_address']['country_id'] %>
+				</div>
+				<div class="clearfix">
+					<%= span_loader2("ajax_edit_shipping") %>
+					<button type="submit" class="btn pull-right" >Submit</button>
+				</div>
+			</div>
+		</div>
+		<% end %>
+
+<script>
+	$(function(){
+		$(".upd-shipping-address").submit(function() {
+			$("#ajax_edit_shipping").show();
+			return true;
+		});
+});
+</script>

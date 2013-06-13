@@ -1,0 +1,15 @@
+
+<% unless @supplier.errors.empty?%>
+  html = '<div class="alert alert-error">';
+  html += "<a class='close' data-dismiss='alert'>×</a>";
+  <% @supplier.errors.values.each do |msg| %>
+  	html += "<%= msg.first %> <br/>";
+  <% end %>
+  html += '</div>';
+  $("#supplier-errors").empty();
+  $("#supplier-errors").append(html);  
+<% else %>
+	OC.clearForms();
+	$.sticky("<%= t(:supplier) %> <%= t(:successfully_created) %>.", {autoclose : 5000, position: "top-right", type: "st-success" });
+	OC.getSuppliers();
+<% end%>

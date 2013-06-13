@@ -1,0 +1,78 @@
+<div style="background-color: #FFF !important; padding: 6px;">
+	<table class="table table-bordered smalltable">
+		<thead>
+			<tr>
+				<th>Product ID</th>
+				<th>Product SKU</th>
+				<th>Product Name</th>
+				<th>Quantity
+					<div class="pull-right close-details" style="cursor:pointer" data-id="<%= @order['increment_id'] %>"><i class="icon-remove"></i></div>
+				</th>
+			</tr>
+		</thead>
+	
+		<tbody>
+			<% @order['items'].each do |item| %>
+			  <% if item['product_type'] == "simple" %>
+			  
+					<tr>
+						<td>
+							<%= item['item_id'] %> ++ <%= item['product_id'] %> </td>
+						<td><%= item['sku'] %></td>
+						<td><%= item['name'] %></td>
+						<td><%= item['qty_ordered'].to_i %></td>
+					</tr>
+	
+					<% ShopProduct.where("isc_product_id = ? and site_id = ?", item['product_id'], session[:site_id]).each do |sp| %>
+					<tr>					
+						<td colspan="4" style="padding-left: 50px !important">
+							<i class="icon-share-alt"></i> &nbsp; &nbsp;
+							<%= sp.product.id %>
+							<%= space(5) %>
+							<%= sp.product.name %>
+							<%= space(5) %>
+							Quantity to order from supplier: 
+							<%= sp.bundle_qty.to_i * item['qty_ordered'].to_i %>
+						</td>
+					</tr>
+					<% end %>				
+
+				<% end %>
+			<% end %>
+		</tbody>
+	</table>
+
+	<% @orders_to_suppliers.each do |ots| %>
+		<strong>Sent Order Product ID:</strong> <%= ots.product_ids %> <%= space(5) %> 
+		<strong>Sent Date:</strong> <%= format_date(ots.created_at, "yyyy-mm-dd") %> <br/>
+		<% if ots.oc_version == "2" %>
+			<%= ots.order_string[:order_params] %>
+		<% else %>
+			<%= ots.order_string %>
+		<% end %>
+		<br/>
+		<strong>Response:</strong> <%= response_success?(ots) ? "Success" : "Failure"%>
+						- <%= ots.response_status.to_s %>
+		<br/><br/>
+	<% end %>
+
+	<% unless @isc_shipment_datas.empty? %>
+    <strong>Shipment Data: </strong><br/>
+		<% @isc_shipment_datas.each do |shipment| %>
+      Product Code: <%= shipment.ext_product_id %>  Shipped Qty: <%= shipment.qty_shipped %>    Ship Date: <%= format_date(shipment.ship_date, 'MdY') %>    Tracking Number: <%= shipment.tracking_num %>
+      Shipping xls: <%= shipment.file_name %>    Uploaded On: <%= format_date(shipment.created_at, 'MdY-time') %>
+      <br/>
+		<% end %>
+	<% end %>
+ 
+</div>
+
+<script>
+$(function() {
+	$(".setnotes-form").submit(function(){
+		$("#loader").show();
+	})
+		
+});
+
+</script>

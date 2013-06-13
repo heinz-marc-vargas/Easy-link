@@ -1,0 +1,20 @@
+
+<%= form_tag porders_path, :remote => true, :method => :get, :id => "order-search-form" do %>
+<div class="row-fluid">
+	<div class="span8">
+		<div class="input-append">
+			Enter Order ID / Email :
+			<input type="text" name="q" size="16" value="<%= params[:q] rescue ''%>" class="span3"  placeholder="Order ID / Email" required>
+			<button type="submit" class="btn btn-success">Search</button>
+		</div>
+	</div>
+</div>
+<% end %>
+
+<script>
+$(function() {
+	$("#order-search-form").submit(function(){
+		$("#loader").show();
+	})	
+});
+</script>

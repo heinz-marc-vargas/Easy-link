@@ -1,0 +1,14 @@
+<% unless @site.errors.empty?%>
+  html = '<div class="alert alert-error">';
+  html += "<a class='close' data-dismiss='alert'>×</a>";
+  <% @site.errors.each do |key, msg| %>
+  	html += "<%= key.to_s.humanize %> <%= msg %> <br/>";
+  <% end %>
+  html += '</div>';
+  $("#site-errors").empty();
+  $("#site-errors").append(html);  
+<% else %>
+	OC.clearForms();	
+	$.sticky("<%= :site.to_s.titleize%> <%= :successfully_created %>.", {autoclose : 5000, position: "top-right", type: "st-success" });
+	OC.getSites();
+<% end%>

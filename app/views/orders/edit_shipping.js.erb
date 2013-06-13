@@ -1,0 +1,4 @@
+id = "<%=@isc_order.orderid %>";
+$("#shipping" + id).hide();
+$("#order-row-details-" + id).show();
+$("#order-content-" + id).empty().hide().append('<%= escape_javascript(render(:partial => '/orders/shipping_form')) %>').show();

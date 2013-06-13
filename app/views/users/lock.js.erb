@@ -1,0 +1,3 @@
+$.sticky("User successfully disabled.", {autoclose : 5000, position: "top-right", type: "st-success" });
+$("#user-row-<%= @user.id %> .user-status").html("<%= escape_javascript(render :partial => "/users/status", :locals => { :user => @user }) %>");
+oTableUsers.fnDraw();

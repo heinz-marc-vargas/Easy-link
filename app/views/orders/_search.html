@@ -1,0 +1,61 @@
+</br>
+<%= form_tag orders_path, :remote => true, :method => :get, :id => "order-search-form" do %>
+<%= hidden_field_tag "per_page", params[:per_page], :id => "per_page" %>
+<div class="row-fluid">
+	<div class="span9">
+		<div class="input-append">
+			Site :
+			<select name="site_id" class="span3">
+			<% sites.each do |site|%>
+				<option value="<%= site.id%>" <%= session[:site_id].to_i == site.id ? "selected" : '' %>><%= site.sitename %></option>
+			<% end %>
+			</select>
+			Order Status :
+			<select name="status" style="width: 100px">
+				<% IscOrder::STATUS.keys.each do |stat|%>
+					<option value="<%= stat%>" <%= params[:status] == stat ? "selected" : '' %>><%= stat %></option>
+				<% end %>
+			</select> 
+			<input type="text" name="q" size="16" value="<%= params[:q] rescue ''%>" class="span3"  placeholder="Order ID">
+			<button type="submit" class="btn btn-success search-order-btn">Search</button>
+		</div>
+	</div>
+
+	<!--
+	<div class="span4">
+		<div class="pull-right">
+			<select name="per_page" id="orders-perpage" style="width: 100px">
+				<option value="15" <%= params[:per_page].to_i == 15 ? "selected" : '' %>>15 per page</option>
+				<option value="25" <%= params[:per_page].to_i == 25 ? "selected" : '' %>>25 per page</option>
+				<option value="50" <%= params[:per_page].to_i == 50 ? "selected" : '' %>>50  per page</option>
+				<option value="100" <%= params[:per_page].to_i == 100 ? "selected" : '' %>>100  per page</option>
+			</select>
+		</div>
+	</div>
+	-->
+	
+</div>
+<% end %>
+
+<script>
+$(function() {
+	$("#order-search-form").submit(function(){
+		$("#loader").show();
+	})
+  
+  $("#orders-perpage").die();
+	$("#orders-perpage").live("change", function() {
+		$("#loader").show();
+		$("#per_page").val($("#orders-perpage option:selected").val());
+		$("#order-search-form").submit();
+	});
+  
+  $(".search-order-btn").die();
+  $(".search-order-btn").live("click", function(){
+    $(this).text("Searching...");
+    $(this).attr("disabled", "disabled");
+    $("#order-search-form").submit();
+  });
+  
+});
+</script>

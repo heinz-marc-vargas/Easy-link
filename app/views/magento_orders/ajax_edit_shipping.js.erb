@@ -1,0 +1,6 @@
+$("#temp-content").empty().hide();
+id = "<%=@order['increment_id'] %>";
+$("#mage_edit_address_loader-" + id).hide();
+$("#temp-content").append('<%= escape_javascript(render(:partial => '/magento_orders/edit_shipping')) %>').fadeIn();
+
+

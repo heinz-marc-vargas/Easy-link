@@ -1,0 +1,19 @@
+<% unless @product.errors.empty?%>
+  html = '<div class="alert alert-error">';
+  html += "<a class='close' data-dismiss='alert'>×</a>";
+  <% @product.errors.keys.each do |k| %>
+  	html += "<%= k.to_s.capitalize %> <%= @product.errors[k].first %> <br/>";
+  <% end %>
+  html += '</div>';
+  $("#product-errors").empty();
+  $("#product-errors").append(html);  
+<% else %>
+	$.sticky("Product successfully updated.", {autoclose : 5000, position: "top-right", type: "st-success" });
+	<% unless params[:from].blank? %>
+		if ("<%= params[:from]%>" == "supplier") {
+			$.get("/products/supplier");
+		}
+	<% else %>
+		OC.getProducts();
+	<% end %>
+<% end%>

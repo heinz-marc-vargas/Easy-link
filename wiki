@@ -1,0 +1,8 @@
+
+
+#Installing rmagick on Mac OS 10.8
+
+- install xquartz - https://xquartz.macosforge.org
+- brew install imagemagick
+
+

@@ -1,0 +1,12 @@
+OC.clearForms();
+
+if ($("#addprodbundle-form").length == 0) {
+	$(".main_content").prepend('<%= escape_javascript(render(:partial => '/products/newbundle'))%>');
+  $("#addprodbundle-form").slideDown(300).delay(800).fadeIn(400);	
+}else{
+	$("#addprodbundle-form").slideDown(300).delay(800).fadeIn(400);
+}	
+
+$(".chzn_a, .chzn_b").chosen({
+	allow_single_deselect: true
+});

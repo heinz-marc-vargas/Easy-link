@@ -1,0 +1,2 @@
+$("#<%= params[:klass] %>-holder-<%= @object.id %>").empty();
+$(".btn-<%= @object.id %>").text('<%= h truncate(params[:comments], :length => 50, :omission => "...") %>').fadeIn();

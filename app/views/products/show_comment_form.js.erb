@@ -1,0 +1,19 @@
+$("#<%= @object.id %>").hide();
+$("#<%= params[:klass] %>-holder-<%= @object.id %>").append('<%= escape_javascript(render(:partial => '/products/comment_form', :locals => { :object => @object }))%>');
+
+$(".cancel-btn-<%= @object.id %>").live('click', function(){
+	$("#<%= params[:klass] %>-holder-<%= @object.id %>").empty();
+	$(".btn-<%= @object.id %>").fadeIn();	
+})
+
+$(".comment-form").submit(function() {
+	console.log('done');
+	$.ajax({
+		url: "/products/" + <%= @object.id %> + "/add_comment.js",
+		type: "POST",
+		data: $(this).serializeArray()
+		
+	})
+	return false;
+	
+})

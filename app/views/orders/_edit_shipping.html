@@ -1,0 +1,55 @@
+<%
+@order.isc_order_address.address_1 = convert_multi_to_single_byte_alpha_num(@order.isc_order_address.address_1)
+@order.isc_order_address.address_2 = convert_multi_to_single_byte_alpha_num(@order.isc_order_address.address_2)
+@order.isc_order_address.city = convert_multi_to_single_byte_alpha_num(@order.isc_order_address.city)
+@order.isc_order_address.state = convert_multi_to_single_byte_alpha_num(@order.isc_order_address.state)
+@order.isc_order_address.zip = convert_multi_to_single_byte_alpha_num(@order.isc_order_address.zip)
+%>
+		<%= form_for @order.isc_order_address, :url => upd_shipping_order_path(@order), :remote => true, :html => { :class => "bs-docs-example form-horizontal upd-shipping-address" } do |f| %>		
+		<div  style="">    
+			<div class="w-box-header">
+				Update Shipping Address
+				
+				<div class="pull-right">
+					
+					<a href="javascript:void(0)" class="close close-shipping-address">×</a>
+				</div>
+			</div>
+			<div class="w-box-content cnt_a">
+				<div class="sepH_b">
+					<label for="w_name">Address</label>
+					<%= f.text_field :address_1, :class => "span4", :placeholder => "Address..." %>
+					<%= f.text_field :address_2, :class => "span4", :placeholder => "Address..." %> 
+				</div>
+				<div class="sepH_b">
+					<label for="w_name">City</label>
+					<%= f.text_field :city, :class => "span4", :placeholder => "City" %>
+				</div>
+				<div class="sepH_b">
+					<label for="w_name">State</label>
+					<%= f.text_field :state, :class => "span4", :placeholder => "State" %>
+				</div>
+				<div class="sepH_b">
+					<label for="w_name">Zip</label>
+					<%= f.text_field :zip, :class => "span4", :placeholder => "Zip Code" %>
+				</div>
+				<div class="sepH_b formSep">
+					<label for="w_name">Country</label>
+					<%= select_tag(:country_iso2, options_for_select(@countries, ["#{@order.isc_order_address.country_iso2}"])) %>
+				</div>
+				<div class="clearfix">
+					<%= span_loader2("ajax_edit_shipping") %>
+					<button type="submit" class="btn pull-right" >Submit</button>
+				</div>
+			</div>
+		</div>
+		<% end %>
+
+<script>
+	$(function(){
+		$(".upd-shipping-address").submit(function() {
+			$("#ajax_edit_shipping").show();
+			return true;
+		});
+});
+</script>

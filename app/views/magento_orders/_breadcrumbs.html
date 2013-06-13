@@ -1,0 +1,18 @@
+<ul class="breadcrumbs">
+	<li class="<%= ["pending", ''].include?(params[:status].to_s) ? 'active' : '' %>"><%= link_to t('orders.pending'), magento_orders_path(:site_id => 18, :status => "pending"), :remote => true %></li>
+  <li class="<%= params[:status] == "pending_payment" ? 'active' : '' %>"><%= link_to t('orders.unpaid'), magento_orders_path(:site_id => 18, :status => "pending_payment"), :remote => true %></li>
+  <li class="<%= params[:status] == "processing" ? 'active' : '' %>"><%= link_to t('orders.paid'), magento_orders_path(:site_id => 18, :status => "processing"), :remote => true, :class => "paid-btn" %></li>
+  <li class="<%= params[:status] == "submitted" ? 'active' : '' %>"><%= link_to t('orders.submitted'), magento_orders_path(:site_id => 18, :status => "submitted"), :remote => true %></li>
+  <li class="<%= params[:status] == "partially_shipped" ? 'active' : '' %>"><%= link_to t('orders.part_submitted'), magento_orders_path(:site_id => 18, :status => "partially_shipped"), :remote => true %></li>
+  <li class="<%= params[:status] == "complete" ? 'active' : '' %>"><%= link_to t('orders.shipped'), magento_orders_path(:site_id => 18, :status => "complete"), :remote => true %></li>
+</ul>
+
+
+<script>
+
+$(".paid-btn").live("click", function(){
+  $(this).removeAttr("href");
+  $(this).removeAttr("data-remote");
+});
+
+</script>

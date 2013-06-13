@@ -1,0 +1,5 @@
+<%= form_tag add_note_product_path(@product, :area => params[:area]), :class => "form-search", :remote => true do %>
+  <input type="text" name="notes" class="input-medium" style="height:14px !important;" placeholder="Type notes..." autofocus required>
+  <button type="submit" class="btn btn-gebo">Submit</button>
+  <%= link_to "Cancel", "", :onclick => "return false;", :class => "cancel-btn-#{@product.ext_product_id}" %>
+<% end %>

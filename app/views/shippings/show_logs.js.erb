@@ -1,0 +1,2 @@
+$("#mail-notifications-<%= @isd.id %>").empty().append('<%= escape_javascript(render(:partial => "/shippings/show_logs"))%>');
+$("#mail-notifications-<%= @isd.id %>").fadeIn();

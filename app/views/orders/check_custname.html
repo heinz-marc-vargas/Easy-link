@@ -1,0 +1,49 @@
+<div class="row-fluid">
+	<h3 class="heading">Check Shipping name: <%= @asset.name %></h3>
+	<br/>
+
+	<% if @orders.empty? %>
+	  <h4 >File is empty</h4>
+	<% else %>
+		<div>
+			<h4 >Orders that shipping name doesnt match with the records in xls file</h4>
+			<br/>
+	
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Order ID</th>
+						<th>Correct Customer name</th>
+						<th>Xls File Customer name</th>
+					</tr>
+				</thead>			
+				
+				 <tbody>
+				 	<% cnt = 1
+				 	  @orders.keys.each do |key| 
+                                            order = @orders["#{key}"]
+                                            file =  @orders["#{key}"][:file].split("***")
+                                            bgred = ""
+                                            if order[:order_address].first_name != file[2]
+                                              bgred = "style='background-color:#FFC7C7'"
+                                            end
+                                          %>
+					  <tr <%= bgred %>>
+					  	<td><%= cnt %></td>
+					  	<td><%= key %></td>
+					   	<td>&nbsp; <%= order[:order_address].first_name rescue '' %> 
+					   	&nbsp; <%= order[:order_address].last_name rescue '' %> </td>
+					   	<td>&nbsp; <%= file[2] %> 
+					         &nbsp; <%= file[3] %> </td>
+					  <tr>
+					  <% cnt += 1 %>
+					<% end %>
+				 </tbody>
+			</table>				
+			
+			
+			
+		</div>
+	<% end %> 
+</div>

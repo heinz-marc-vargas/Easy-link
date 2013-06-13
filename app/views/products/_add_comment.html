@@ -1,0 +1,3 @@
+<% unless params[:comments].nil? %>
+<%= h truncate(params[:comments], :length => 50, :omission => "...") %>
+<% end %>

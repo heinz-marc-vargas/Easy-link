@@ -1,0 +1,49 @@
+<div class="pull-right close-details" style="cursor:pointer" data-id="<%= @order['increment_id']%>"><i class="icon-remove"></i></div>
+<h3 class="heading2">Billing details</h3>
+
+<div style="background-color: #FFF !important; padding: 3px;">
+	
+	<div class="bs-docs-example form-horizontal billing-details-div">
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Customer Details :</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		    	<%= @order['customer_firstname'] %> <%= @order['customer_lastname'] %>
+		      <br/>
+		      <%= @order['billing_address']['street'] %> 
+		      <%= @order['billing_address']['city'] %>
+		      <%= @order['billing_address']['region'] %>
+		      <%= @order['billing_address']['postcode'] %>
+		      <%= @order['billing_address']['country_id'] %>
+		      
+		    </div>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Email :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= @order['customer_email'] rescue "N/A" %> </label>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Phone Number :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= @order['billing_address']['telephone'] rescue "N/A" %> </label>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Date Ordered :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= @order['created_at'] %> </label>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Payment Method :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= @order['payment']['method'] %> </label>
+		  </div>
+		</div>
+	</div>
+ 
+
+</div>

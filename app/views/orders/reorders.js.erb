@@ -1,0 +1,12 @@
+OC.clearForms();
+$("#loader").hide();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/orders/reorders"))%>');
+
+$(function() {
+	$('.pop_over').popover();
+		
+	$(".text-order-id").live('change', function(){
+		var hidden = $(this).attr('reorder-id');
+		$("#" + hidden).val($(this).val());
+	});
+})

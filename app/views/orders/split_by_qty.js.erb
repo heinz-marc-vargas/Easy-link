@@ -1,0 +1,15 @@
+<% if @order_proc.from_magento? %>
+	id = "<%= @order_proc.order_id %>";
+	$(".table-" + id + "-tbody").empty().append('<%= escape_javascript(render(:partial => '/magento_orders/order_processing', :locals => { :ordproc => @order_proc })) %>').fadeIn();
+	
+	<% @order_proc.suborders.each do |order_proc| %>
+	$(".table-" + id + "-tbody").append('<%= escape_javascript(render(:partial => '/magento_orders/order_processing', :locals => { :ordproc => order_proc })) %>').fadeIn();
+	<% end %>
+<% else %>
+	id = "<%= @order_proc.order_id %>";
+	$(".table-" + id + "-tbody").empty().append('<%= escape_javascript(render(:partial => '/orders/order_processing', :locals => { :ordproc => @order_proc })) %>').fadeIn();
+	
+	<% @order_proc.suborders.each do |order_proc| %>
+	$(".table-" + id + "-tbody").append('<%= escape_javascript(render(:partial => '/orders/order_processing', :locals => { :ordproc => order_proc })) %>').fadeIn();
+	<% end %>
+<% end%>

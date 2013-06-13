@@ -1,0 +1,115 @@
+<div class="navbar-inner">
+  <div class="container-fluid">
+		<a class="brand" href="<%= root_path %>">Order Connect
+      <% if Rails.env == "staging" %>
+      <span style="color: orange;font-weight: bold; font-size:16px; float: right; margin-right: 10px;">STAGING</span>
+      <% end %>
+    </a>
+    
+		<ul class="nav user_menu pull-right">
+			<li class="hidden-phone hidden-tablet">
+        <div class="nb_boxes clearfix">
+            <a data-toggle="modal" data-backdrop="static" href="#myMail" class="label ttip_b" title="New messages">0<i class="splashy-mail_light"></i></a>
+        </div>
+      </li>
+			<li class="divider-vertical hidden-phone hidden-tablet"></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle nav_condensed" data-toggle="dropdown"><i class="<%= show_current_lang%>"></i> <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/?lang=ja"><i class="flag-jp"></i> Japanese</a></li>
+					<li><a href="/?lang=en"><i class="flag-us"></i> English</a></li>
+				</ul>
+			</li>
+      <li class="divider-vertical hidden-phone hidden-tablet"></li>
+	    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        	<% if current_user.avatar.exists? %>
+        		<%= image_tag current_user.avatar.url(:thumb), :size => "20x20" %>
+        	<% else %>
+        	<img src="/img/user_avatar.png" alt="" class="user_avatar" />
+        	<% end %>
+        	<%= current_user.fullname %> <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+					<li><a href="/profile"><%= t('myprofile') %></a></li>
+					<li class="divider"></li>
+					<li><%= link_to t('logout'), destroy_user_session_path, :method => :delete  %></li>
+        </ul>
+      </li>
+    </ul>
+		<a data-target=".nav-collapse" data-toggle="collapse" class="btn_menu"><span class="icon-align-justify icon-white"></span></a>
+    <nav>
+      <div class="nav-collapse">
+        <ul class="nav">
+        	
+        	<% if can? :read, Email %>	
+          <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-list-alt icon-white"></i> <%= t('forms.text') %> <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to "SAVA Communications Form", sava_comms_form_forms_path  %></li>
+              <li><%= link_to "Westmead Communications Form", westmead_comms_form_forms_path  %></li>
+            </ul>
+          </li>
+          <% end %>
+          
+          <% if can? :read, Product %>
+          <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-th icon-white"></i> <%= t('products.text') %> <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to t('products.products_list'), products_path, :remote => true %></li>
+              <li><%= link_to t('supplier_products.text'), shop_products_path, :remote => true %></li>
+              <li><a href="javascript:;" onclick="OC.importStocks(); return false;"><%= t(:import_stock_data) %></a></li>
+              <li><a href="javascript:;" onclick="OC.importThresholds(); return false;"><%= t(:import_stock_threshold_data) %></a></li>
+            </ul>
+          </li>
+          <% end %>
+          
+          <% if can? :update, IscOrder %>
+          <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-shopping-cart icon-white"></i> <%= t(:ordering) %> <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to t(:iscorders), orders_path(:site_id => (session[:site_id] || Constant::DEFAULT_SITE_ID), :status => "Paid" ), :remote => true %></li>
+              <li><a href="javascript:;" onclick="OC.showReOrder(); return false;">Re-Ordering</a></li>              
+              <li><a href="javascript:;" onclick="OC.showOrderSummary(); return false;">Ordering Summary</a></li>
+              <li><a href="javascript:;" onclick="OC.showOrderSpreadsheets(); return false;">Ordering Spreadsheets</a></li>
+              <li><a href="javascript:;" onclick="OC.showImports(); return false;">Import Shipping Numbers</a></li>
+<!--
+              <li><a href="javascript:;" onclick="OC.showShippingNotifications(); return false;">Shipping Notifications</a></li>
+
+              <li><a href="javascript:;" onclick="OC.checkOrderDuplicate(); return false;">Check Duplicates</a></li>
+-->
+              <li><a href="javascript:;" onclick="OC.checkQtyDuplicate(); return false;">Check Qty Duplicate</a></li>
+            </ul>
+          </li>
+          
+          <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-print icon-white"></i> <%= t(:accounts) %> <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to t('invoice.title'), list_sales_invoice_accounts_path %></li>
+              <li><%= link_to t('credit.list_unmatched_payments'), list_unmatched_payments_accounts_path %></li>
+              <li><%= link_to t('reports.list_total_sale_payments'), list_sale_totals_accounts_path %></li>
+            </ul>
+          </li>
+
+          <li></li>
+          <li><a href="<%= links_path %>" data-remote="true"><i class="icon-globe icon-white"></i> <%= t(:staff_portal) %></a></li>
+          <li><a href="<%= docs_path %>" data-remote="true"><i class="icon-question-sign icon-white"></i> <%= t(:help) %></a></li>
+
+          <% end %>
+          
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div class="modal hide fade modal-mail"  id="myMail">
+    <div class="modal-header">
+        <button class="close btn" data-dismiss="modal">×</button>
+        <h3 class="white"><%= t('messages.title') %></h3>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-info"><%= t('messages.no_messages') %></div>
+    </div>
+    <div class="modal-footer">
+    </div>
+</div>

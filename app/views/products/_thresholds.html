@@ -1,0 +1,30 @@
+<div class="row-fluid">
+	<div class="span6">
+		<h3 class="heading">Import Stock Threshold</h3>
+	</div>
+</div>	
+
+<% unless @error_message.nil? %>
+	<div class="alert alert-error">
+	  <%= @error_message %>
+	</div>
+<% end %>
+		
+<div>
+	<div class="span6">
+		<%= form_tag thresholds_products_path, :method => :post, :multipart => true, :class => "form-inline" do %>
+			<div class="formSep">
+				<div class="row-fluid">
+					<div class="span8">
+						<label>Select Stock Threshold From XLS file: </label>
+						<input type="file" name="file"  size="19" >
+						<button class="btn btn-inverse" type="submit">Start Import</button>
+					</div>
+				</div>
+			</div>
+		<% end %>
+  </div>
+</div>
+
+<div class="clear"></div>
+<%= render "/products/threshold_data" %>

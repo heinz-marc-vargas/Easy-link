@@ -1,0 +1,114 @@
+<div class="pull-right close-details" style="cursor:pointer" data-id="<%= @isc_order.orderid%>"><i class="icon-remove"></i></div>
+<h3 class="heading2">Edit Shipping details </h3>
+<%= span_loader("shipping#{@isc_order.orderid}") %>
+
+<div style="background-color: #FFF !important; padding: 6px;">
+
+	<%= form_for @isc_order.isc_order_address, :url => shipping_order_path(@isc_order, :format => :js), :remote => true, :html => { :class => "bs-docs-example form-horizontal shipping-form"} do |f| %>
+
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Email</label>
+		  <div class="controls">
+		    <div class="span5">
+		    	<label class="">First name:</label>
+		    	<%= f.text_field :first_name, :class => "span10"  %>
+		    </div>
+		    <div class="span5">
+		    	<label class="">Last name:</label>
+		    	<%= f.text_field :last_name, :class => "span10" %>
+		    </div>
+		  </div>
+		</div>
+				
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Ship To:</label>
+		  <div class="controls">
+		    <div class="span5">
+		    	<label class="">Address 1:</label>
+		    	<%= f.text_field :address_1, :class => "span10" %>
+		    </div>
+		    <div class="span5">
+		    	<label class="">Address 2:</label>
+		    	<%= f.text_field :address_2, :class => "span10" %>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="control-group">
+		  <div class="controls">
+		    <div class="span5">
+		    	<label class="">City:</label>
+		    	<%= f.text_field :city, :class => "span10"  %>
+		    </div>
+		    <div class="span5">
+		    	<label class="">State:</label>
+		    	<%= f.text_field :state, :class => "span10"  %>
+		    </div>
+		  </div>
+		</div>
+		
+		<div class="control-group">
+		  <div class="controls">
+		    <div class="span5">
+		    	<label class="">Zip code:</label>
+		    	<%= f.text_field :zip, :class => "span10"  %>
+		    </div>
+		    <div class="span5">
+		    	<label class="">Country code:</label>
+		    	<%= select_tag(:country_iso2, options_for_select(@countries, ["#{@isc_order.isc_order_address.country_iso2}"])) %>
+		    </div>
+		  </div>
+		</div>
+			
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Email</label>
+		  <div class="controls">
+		    <div class="span5">
+		       <input class="span10" name="isc_order_address[email]" type="text" value="<%= @isc_order.isc_order_address.email rescue "N/A" %>">
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Phone Number:</label>
+		  <div class="controls">
+		    <div class="span5">
+		       <input class="span10" name="isc_order_address[phone]" type="text" value="<%= @isc_order.isc_order_address.phone rescue "N/A" %>">
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Shipping Date:</label>
+		  <div class="controls">
+		    <div class="">
+		    	<div class="input-append date" id="shippingdate" data-date-format="dd/mm/yyyy">
+						<input class="span6" type="text" readonly="readonly" value="<%= Time.at(@isc_order.orddateshipped).strftime("%d/%m/%Y") rescue ''  %>" />
+						<span class="add-on"><i class="splashy-calendar_day"></i></span>
+					</div>
+		       
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group">
+	    <div class="controls">
+	      <button type="submit" class="btn btn-gebo">Save changes</button>
+	      <a href="javascript:void(0)" class="btn cancel-btn-shipping" data-id="<%= @isc_order.orderid %>">Cancel</a>
+	    </div>
+	  </div>
+	
+	<% end %>
+	
+</div>
+
+<script>
+	$(function() {
+		$(".shipping-form").submit(function() {
+			$("#shipping" + "<%= @isc_order.orderid %>").show();
+		});
+		
+		$('#shippingdate').datepicker();
+		$('#dp1').datepicker();
+	})
+</script>

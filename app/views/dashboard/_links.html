@@ -1,0 +1,63 @@
+<div class="row-fluid">
+	<div class="span6">
+		<h3 class="heading">Staff links</h3>
+	</div>	
+
+	<div class="clear"></div>
+	<div class="span4">
+		<h3>Singapore</h3>
+		Office: +656795-3712
+		
+		<h3>Japan</h3>
+		
+		Office: +8198087-5380
+		
+		<h3>Bangkok</h3>
+		
+		Office: +662631-9000
+		<br/>
+		
+		<table class="paginate sortable full">
+	    <thead>
+	    <tr>
+	      <th>Office Extension</th>
+	      <th>Name</th>
+	    </tr>
+	    </thead>
+	    <% @staffExts.each do |ext| %>
+	    <tr class="<%= cycle("oddRow", "evenRow") %>">
+	      <td><%= ext.staff_extension.extension rescue "N/A" %></td>
+	      <td><%= ext.first_name %></td>
+	    </tr>
+	    <% end %>
+	  </table>
+	</div>
+	
+	<div class="span4">
+		
+	</div>
+  
+
+	<div class="span4">
+      <% @linkCategories.each do |category| %>
+      <div class="portalLinkListing">
+        <table class="paginate sortable full" cellpadding="0" cellspacing="0">
+          <thead>
+          <tr>
+            <th><%= category.category_name %></th>
+          </tr>
+          </thead>
+          <% @links = Link.where(:link_category_id => category.id)%>
+          <% @links.each do |link| %>
+          <tr>
+            <td>
+              <a href="<%= link.url %>" alt="<%= link.urlDesc %>" target="_blank"><%= link.urlDesc %></a>
+            </td>
+          </tr>
+          <% end %>
+        </table>
+      </div>
+    <% end %>		
+	</div>
+
+</div>

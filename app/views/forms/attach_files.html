@@ -1,0 +1,14 @@
+<div class="row-fluid">
+  <div class="span6">
+    <h3 class="heading">Attach Files</h3>
+  </div> 
+  
+  <div class="span">
+    <%= form_tag({:action => :attach_files, :email_id => params[:email_id], :supplier_id => params[:supplier_id]}, :multipart => true) do |f| %>
+      <div style="margin-top:10px;"><strong>Attachment 1: </strong><%= file_field_tag 'attached_file_1' %></div>
+      <div style="margin-top:10px;"><strong>Attachment 2: </strong><%= file_field_tag 'attached_file_2' %></div>
+      <div style="margin-top:10px;"><strong>Attachment 3: </strong><%= file_field_tag 'attached_file_3' %></div><br />
+      <%= submit_tag("Save Attachments", {:class => "btn", :id => "save_attachments"}) %>
+    <% end %>
+  </div>
+ </div>

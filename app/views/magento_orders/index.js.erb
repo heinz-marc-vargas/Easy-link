@@ -1,0 +1,29 @@
+Application.render_content(<%= render('magento_orders/index').to_json.html_safe %>);
+$("#loader").hide();
+
+<% if params[:status].to_s == "processing"%>
+	$(".update-status").fadeIn('slow');
+	$("#preview-supplier-data").click(function(){
+		$("#loader").show();
+		
+		abort_ajax_requests();
+	  ajax_requests.push($.get("/magento_orders/preview_data.js"))
+	  return false;
+	});
+	
+<% end %>
+<%
+ids = @orders.collect{|ord| ord['increment_id']}
+%>
+
+<% if params[:status].to_s == "processing" %>
+  console.log("<%= params[:status] %>");
+  $(".paid-btn").addAttr("href", "/magento_orders?site_id=18&status=processing");
+  $(".paid-btn").addAttr("data-remote", "true");  
+<% end %>
+
+
+abort_rails_requests();
+ajax_requests.push($.post("/magento_orders/populate_order_data", { order_ids: "<%= ids.join(",")%>"} ) );
+
+$(".global-search-order-btn").removeAttr("disabled");

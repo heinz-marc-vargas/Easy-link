@@ -1,0 +1,56 @@
+<div class="pull-right close-details" style="cursor:pointer" data-id="<%= @order['increment_id']%>"><i class="icon-remove"></i></div>
+<h3 class="heading2">
+	Shipping details 
+	[ <%= link_to "Edit", edit_shipping_magento_order_path(:id => @order['increment_id']), :remote => true, :class => "edit-shipping-details", "data-id" => @order['increment_id'] %> ]
+</h3>
+<%= span_loader("shipping#{@order['increment_id']}") %>
+
+<div style="background-color: #FFF !important; padding: 3px;">
+	
+	<form class="bs-docs-example form-horizontal">
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Ship To:</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		    	<%= @order['shipping_address']['firstname'] %> <%= @order['shipping_address']['lastname'] %>
+		      <br/>
+		      <%= @order['shipping_address']['street'] %> 
+		      <%= @order['shipping_address']['city'] %>
+		      <%= @order['shipping_address']['region'] %>
+		      <%= @order['shipping_address']['postcode'] %>
+		      <%= @order['shipping_address']['country_id'] %>
+
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Email</label>
+		  <div class="controls">
+		    <div class="control-label2 ">
+		       <%= @order['customer_email'] rescue "N/A" %>
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Phone Number:</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		       <%= @order['shipping_address']['telephone'] rescue "N/A" %>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Shipping Cost:</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		       <%= @order['shipping_amount'] %>
+		    </div>
+		  </div>
+		</div>
+		
+	</form>
+	
+</div>

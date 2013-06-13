@@ -1,0 +1,44 @@
+</br>
+<%= form_tag magento_orders_path, :remote => true, :method => :get, :id => "order-search-form" do %>
+	<%= hidden_field_tag "per_page", params[:per_page], :id => "per_page" %>
+
+	<div class="row-fluid">
+		<div class="span8">
+			<div class="input-append">
+				Order Status :
+				<select name="status" style="width: 100px">
+					<option value="">All</option>
+					<% IscOrder::MAGE_STATUS.each do |key, val|%>
+						<option value="<%= key%>" <%= params[:status] == key ? "selected" : '' %>><%= val %></option>
+					<% end %>
+				</select> 
+				<input type="text" name="q" size="16" value="<%= params[:q] rescue ''%>" class="span3"  placeholder="Order ID">
+				<button type="submit" class="btn btn-success search-order-btn">Search</button>
+			</div>
+		</div>
+	
+	</div>
+<% end %>
+
+<script>
+$(function() {
+	$("#order-search-form").submit(function(){
+		$("#loader").show();
+	})
+  
+  $("#orders-perpage").die();
+	$("#orders-perpage").live("change", function() {
+		$("#loader").show();
+		$("#per_page").val($("#orders-perpage option:selected").val());
+		$("#order-search-form").submit();
+	});	
+
+  $(".search-order-btn").die();
+  $(".search-order-btn").live("click", function(){
+    $(this).text("Searching...");
+    $(this).attr("disabled", "disabled");
+    $("#order-search-form").submit();
+  });  
+  
+});
+</script>

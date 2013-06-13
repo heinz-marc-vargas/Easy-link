@@ -1,0 +1,3 @@
+$("#loader").hide();
+OC.clearForms();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/admins/pendingjobs"))%>');

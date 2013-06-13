@@ -1,0 +1,12 @@
+OC.clearForms();
+
+if ($("#addprod-form").length == 0) {
+	$(".main_content").prepend('<%= escape_javascript(render(:partial => '/products/new'))%>');
+  $("#addprod-form").slideDown(300).delay(800).fadeIn(400);	
+}else{
+	$("#addprod-form").slideDown(300).delay(800).fadeIn(400);
+}	
+
+$(".chzn_a, .chzn_b").chosen({
+	allow_single_deselect: true
+});

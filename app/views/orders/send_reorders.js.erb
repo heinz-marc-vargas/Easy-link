@@ -1,0 +1,3 @@
+OC.clearForms();
+$.sticky("Re-order has been successfully submitted. ", {autoclose : 5000, position: "top-right", type: "st-success" });
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/orders/reorders_result"))%>');

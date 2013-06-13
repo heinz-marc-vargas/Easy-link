@@ -1,0 +1,18 @@
+<% unless @user.errors.empty?%>
+	<div class="alert alert-error">
+	<% @user.errors.values.each do |msg| %>
+		<a class="close" data-dismiss="alert">×</a>
+		<%= msg.first  %> <br/>
+	<% end %>
+	</div>
+<% end%>
+
+<div id="adduser-form" class="">
+	<div id="user-errors"></div>
+	<div class="row-fluid">
+		<div class="span10">
+			<h3 class="heading">Add new user</h3>
+	    <%= render :partial => "user_form" %>	
+		</div>
+	</div>
+</div>

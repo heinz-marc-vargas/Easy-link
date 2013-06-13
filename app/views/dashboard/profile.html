@@ -1,0 +1,76 @@
+<div class="row-fluid">
+		<div class="span12">
+			<h3 class="heading">Profile</h3>
+			<div class="row-fluid">
+				<div class="span8">
+					<%= form_for current_user, :url => profile_path, :html => { :multipart => true, :class => "form-horizontal", :method => :post } do |f|%>
+						<fieldset>
+							<div class="control-group formSep">
+								<label class="control-label">Email</label>
+								<div class="controls text_line">
+									<strong><%= current_user.email %></strong>
+								</div>
+							</div>
+							<div class="control-group formSep">
+								<label for="fileinput" class="control-label">User avatar</label>
+								<div class="controls">
+									<div data-fileupload="image" class="fileupload fileupload-new">
+										<input type="hidden" />
+										<div style="width: 80px; height: 80px;" class="fileupload-new thumbnail">
+											<%= image_tag current_user.avatar.url(:medium) if current_user.avatar.exists? %>
+										</div>
+										<div style="width: 80px; height: 80px; line-height: 80px;" class="fileupload-preview fileupload-exists thumbnail"></div>
+										<span class="btn btn-file">
+											<span class="fileupload-new">Select image</span>
+											<span class="fileupload-exists">Change</span>
+											<input type="file" id="fileinput" name="fileinput" />
+											<%= f.file_field :avatar %>
+										</span>
+										<a data-dismiss="fileupload" class="btn fileupload-exists" href="#">Remove</a>
+										<div class="clear"></div>										
+										Recommended size: 100px X 100px
+									</div>	
+								</div>
+							</div>
+							<div class="control-group formSep">
+								<div class="sepH_b">
+									<label for="u_fname" class="control-label">First name</label>
+									<div class="controls">
+										<%= f.text_field :first_name, :class => "input-xlarge", :id => "firstname" %>
+									</div>
+								</div>
+								
+									<label for="u_fname" class="control-label">Last name</label>
+									<div class="controls">
+										<%= f.text_field :last_name, :class => "input-xlarge", :id => "lastname" %>
+									</div>								
+							</div>
+							
+							<div class="control-group formSep">
+								<label for="u_password" class="control-label">Password</label>
+								<div class="controls">
+									<div class="sepH_b">
+										<%= f.password_field :password, :class => "input-xlarge", :id => "password" %>
+										<span class="help-block">Enter your password</span>
+									</div>
+									<%= f.password_field :password_confirmation, :class => "input-xlarge", :id => "password_confirmation" %>
+									<span class="help-block">Repeat password</span>
+								</div>
+							</div>
+							
+							 
+							
+							<div class="control-group">
+								<div class="controls">
+									<button class="btn btn-gebo" type="submit">Save changes</button>
+								<%= link_to "Cancel", root_path, :class => "btn" %>
+								</div>
+							</div>
+							
+						</fieldset>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+	

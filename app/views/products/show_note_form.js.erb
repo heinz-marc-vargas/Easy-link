@@ -1,0 +1,7 @@
+$("#<%= @product.ext_product_id %>").hide();
+$("#<%= params[:area] %>note-<%= @product.ext_product_id %>").append('<%= escape_javascript(render(:partial => '/products/note_form'))%>');
+
+$(".cancel-btn-<%= @product.ext_product_id %>").live('click', function(){
+	$("#<%= params[:area] %>note-<%= @product.ext_product_id %>").empty();
+	$(".btn-<%= @product.ext_product_id %>").fadeIn();	
+})

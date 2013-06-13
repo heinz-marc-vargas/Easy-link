@@ -1,0 +1,45 @@
+<div class="row-fluid">
+	<div class="span3">
+		<h4 class="heading">Re-Order Result</h4>
+	</div>
+</div>
+
+<div class="row-fluid">
+		<% @otss_created.each do |ots| %>	
+			<table class="table " data-rowlink="a" id="orders-list">
+			<tr style="height: 16px !important;">
+				<td><strong>Order ID:</strong> <%= ots.order_id %></td>
+				<td><strong>Split Flag:</strong> <%= ots.split_flag %></td>
+				<td><strong>Isc Order Product ID:</strong> <%= ots.product_ids %></td>
+				<td><strong>SKU/Medex Product ID:</strong> <%= ots.order_string_product_ids %></td>
+				<td><strong>Qty:</strong> <%= ots.order_product.ordprodqty %></td>
+			</tr>
+			</table>		
+			<div>
+				<strong>Order String:</strong> <%= ots.order_string[:order_params] %><br/>
+				<strong>Response: </strong>
+				<% if ots.supplier_ids.to_i == Supplier.find_by_company_name("Westmead").id %>
+					This is a Westmead product. XLS file for ordering Westmead can be generated at <a onclick="OC.showOrderSpreadsheets(); return false;" href="#">Ordering Spreadsheets</a> page				
+				<% else %>
+					<% if response_success?(ots) %>
+						Order Response :  <span class="green">Success</span>
+					<% else %>
+						Order Response :  <span class="red">Failure - <%= show_response_message(ots) %></span>
+					<% end %>
+				<% end %>
+
+				<br/>
+				<% if can? :read, IscOrder %>
+					<br/>
+					<% if ots.order_processing_id.nil? %>
+										<%= ots.order_string[:order_params] rescue ''%>
+										<hr>
+					<% end %>
+				  <%= ots.response_status.inspect %>
+				<% end %>				
+				
+				
+			</div>
+		<% end %>
+</div>
+

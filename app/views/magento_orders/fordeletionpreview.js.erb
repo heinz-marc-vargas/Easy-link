@@ -1,0 +1,3 @@
+$("#loader").show();
+$(".modal-data").empty().append('<%= escape_javascript(render(:partial => "/magento_orders/preview"))%>');
+$("#modal_loader_p").hide();

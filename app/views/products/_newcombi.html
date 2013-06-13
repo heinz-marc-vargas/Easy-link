@@ -1,0 +1,114 @@
+<% unless @shopproduct.errors.empty?%>
+	<div class="alert alert-error">
+	<% @shopproduct.errors.keys.each do |k| %>
+		<a class="close" data-dismiss="alert">×</a>
+		<%= k.to_s.capitalize %> <%= @shopproduct.errors[k].first %> <br/>
+	<% end %>
+	</div>
+<% end%>
+
+<div id="addcombi-form" class="">
+	<div id="product-errors"></div>
+	<div class="row-fluid">
+		<div class="span8">
+			<h3 class="heading">Add new combi</h3>
+			
+			<%
+			if @shopproduct.new_record?
+			  upath = createcombi_products_path
+			  btn_string = "Add"
+			else
+			  upath = updatecombi_product_path(@product)
+			  btn_string = "Save changes"
+			end
+			%>
+
+<%= form_for :shop_product, :url => upath, :remote => true, :method => :post, :html => { :class => "form-horizontal", :id => "combi-form"} do |f| %>
+
+  <div class="control-group">
+    <div class="controls">
+    	<div class="span7">
+	    	<select name="product[]" data-placeholder="Choose a Product..." class="chzn_a inline span12">
+						<option value="">Choose a product</option>
+						<% @products.each do |prod| %>
+						<option value="<%= prod.id %>" ><%= prod.name.capitalize %> <%= show_supplier_name(prod, @suppliers) %></option>
+						<% end %>
+					</select>
+			</div>
+			<div class="span3">
+				<%= text_field_tag "bundle_qty[]", nil, :class => "inline required", :placeholder => "Quantity", :style => "width:50px", :required => "required" %>
+			</div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+    	<div class="span7">
+	    	<select name="product[]" data-placeholder="Choose a Product..." class="chzn_b span12">
+					<option value="">Choose a product</option>
+					<% @products.each do |prod| %>
+					<option value="<%= prod.id %>" ><%= prod.name.capitalize %> <%= show_supplier_name(prod, @suppliers) %></option>
+					<% end %>
+				</select>
+			</div>
+			<div class="span3">
+				<%= text_field_tag "bundle_qty[]", nil, :class => "required", :placeholder => "Quantity", :style => "width:50px" %>
+			</div>
+    </div>
+  </div>
+  
+  <div id="new-combi-rows"></div>
+	
+ 
+ 
+	<div class="control-group" style="cursor:pointer">
+   <div class="controls">
+   	
+    	<%= image_tag("/img/gCons/add-item.png", :title => "Add another product", :class => "add_image") %>
+    	 Add new product
+    </div>
+  </div>
+	
+  
+  <div class="control-group">
+    <label class="control-label" for="inputPassword">Sites:</label>
+    <div class="controls">
+    	<% @sites.each do |site| %>
+      <label class="checkbox">
+	      <input type="checkbox" class="product_sites" value="<%= site.id %>" name="sites[]" ><%= site.sitename %> (<%= site.site_url %>)
+	    </label>
+	    <% end %>
+    </div>
+  </div>
+  
+  
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-gebo"><%= btn_string %></button>
+      <a href="#" class="btn" id="btn-cancel">Cancel</a>
+    </div>
+  </div>
+  
+<% end %>
+<br/><br/>
+
+
+</div>
+	</div>
+</div>
+
+<div class="row-template hide">
+	<div class="control-group row-combi">
+	  <div class="controls">
+	  	<select name="product[]"   data-placeholder="Choose a Product..." class="chzn_bxx">
+					<option value="">Choose a product</option>
+					<% @products.each do |prod| %>
+					<option value="<%= prod.id %>" ><%= prod.name.capitalize %> <%= show_supplier_name(prod, @suppliers) %></option>
+					<% end %>
+				</select>
+				<%= text_field_tag "bundle_qty[]", nil, :class => "required", :placeholder => "Quantity", :style => "width:50px" %>
+			<i class="splashy-remove_minus_sign remove-combi-row" style="cursor:pointer"></i>
+	  </div>
+	</div>
+</div>
+

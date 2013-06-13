@@ -1,0 +1,74 @@
+<%
+note = ""
+
+if @product.new_record?
+  upath = products_path
+  btn_string = "Add"
+  note = "<span style='text-align:center; color:blue;'><i><strong>Note:</strong> Please check if supplier product already exists in OC before adding.</i><br/><br/></span>"
+else
+  upath = product_path(@product)
+  btn_string = "Save changes"
+end
+%>
+
+<%= form_for :product, :url => upath, :remote => true, :method => :post, :html => { :class => "form-horizontal"} do |f| %>
+	<%= note.html_safe %>
+	<%= hidden_field_tag "from", params[:from] %>	
+  <div class="control-group">
+    <label class="control-label span3" for="inputEmail">Product name: &nbsp;</label>
+    <div class="controls">
+      <%= f.text_field :name %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword">Supplier Product ID: &nbsp;</label>
+    <div class="controls">
+      <%= f.text_field :ext_product_id %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword">Supplier: &nbsp;</label>
+    <div class="controls">
+      <select name="product[supplier_id]" id="supplier_id" data-placeholder="Choose a supplier" class="chzn_b">
+				<option value="">Choose a supplier</option>
+				<% @suppliers.each do |sup| %>
+				<option value="<%= sup.id %>" <%= sup.id == @product.supplier_id ? "selected" : '' %>><%= sup.company_name.capitalize %></option>
+				<% end %>
+			</select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword" >Associated Supplier Product:  &nbsp;</label>
+    <div class="controls">
+    	<select name="product_as" id="product_as" data-placeholder="Choose a Product..." class="chzn_a">
+				<option value="">Choose a product(optional)</option>
+				<% @products.each do |prod| %>
+					<% unless @product_uid.nil?
+					     sel = (@product_uid.id == prod.uid && prod.id != @product.id)? "selected" : ""
+					   else
+					     sel = ""
+					   end
+					%>   
+					<option value="<%= prod.id %>" <%= sel %>><%= prod.name.capitalize %></option>
+				<% end %>
+			</select>
+
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-gebo"><%= btn_string %></button>
+      <a href="#" class="btn" id="button-addproduct-cancel">Cancel</a>
+    </div>
+  </div>
+<% end %>
+<br/><br/>
+<script>
+$(function(){
+  $(".chzn_a").chosen({
+		allow_single_deselect: true
+  });
+  $(".chzn_b").chosen();
+});
+</script>

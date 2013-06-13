@@ -1,0 +1,2 @@
+$("#<%= params[:area] %>note-<%= @product.ext_product_id %>").empty();
+$(".btn-<%= @product.ext_product_id %>").text('<%= h truncate(@product.notes, :length => 50, :omission => "...") %>').fadeIn();

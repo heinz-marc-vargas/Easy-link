@@ -1,0 +1,124 @@
+<%= render("breadcrumbs") %>
+
+<div class="row-fluid">
+	<div class="span5">
+		<h3 class="heading">
+			<%= current_site_logo %> &nbsp;
+			<span style="margin-top: 5px;"><%#= params[:status] || "Pending"%> Magento Orders</span> 
+		</h3>
+	</div>
+	
+	<%= render("sublinks") %>
+
+	<%= render :partial => "search", :locals => { :sites => @sites } %>
+
+	<%= form_tag set_status_magento_orders_path(:site_id => session[:site_id], :status => params[:status], :page => params[:page]), :remote => true, :id => "orders-list-form", :class => "hide" do %>
+      <%= hidden_field_tag "mark-as", "" %>
+      <%= hidden_field_tag "send-email", "0" %>
+	<% end %>
+	
+	<div class="pull-right input-append">
+		 <select id="order-actions" name="order-actions">
+		 	<option value="">Order actions</options>
+		 	<option value="pending"><%= t('orders.mark_pending') %></option>
+		 	<option value="unpaid"><%= t('orders.mark_unpaid') %></option>
+		 	<option value="paid"><%= t('orders.mark_paid') %></option>
+		 	<option value="submitted"><%= t('orders.mark_submitted') %></option>
+		 	<option value="partially-shipped"><%= t('orders.mark_part_shipped') %></option>
+		 	<option value="shipped"><%= t('orders.mark_shipped') %></option>
+		 	<option value="cancelled"><%= t('orders.mark_cancelled') %></option>
+		 </select>
+		 <button type="submit" class="btn btn-gebo btn-mgorder-actions">GO</button>
+	</div>	
+	
+		<div style="clear:both"></div>
+	
+		<div>
+			<div class="pull-left">
+      	<span class="alert alert-info update-status pull-left hide"><img src="/images/loading-small.gif">Updating Preview supplier data...</span>
+      	<span class="alert alert-success update-status-success pull-left hide">Updating Preview supplier data completed</span>
+      </div>
+      <div style="clear:both"></div>
+
+      <span> <%= t(:total) %>:  <%= @orders.length %> </span>			
+			<% unless @result.nil? %>
+				<span style="color: #ccc; font-size: 10px;" title="<%#= @result[:missing_lines].map(&:orderorderid).uniq.inspect %>">
+					&nbsp; &nbsp; <%= t('orders.missing_products') %>: <%= truncate(@result[:missing_lines].map(&:orderorderid).uniq.to_s, :omission => "...", :length => 60) %>
+				</span>
+			<% end %>
+			
+	  </div>
+
+		<table class="table table-bordered mediaTable" id="orders-list">
+			<thead>
+				<tr>
+					<th><%= check_box_tag "check_all", nil, nil, :class => "checkbox_all" %></th>
+					<th class=""><%= t('orders.order_id') %></th>
+					<th class=""><%= t('orders.customer_name') %></th>
+					<th class=""><%= t('orders.customer_email')%></th>
+					<th class=""><%= t('orders.order_date') %></th>
+					<th class=""><%= t('orders.order_status') %></th>
+					<!-- <th class=""><%= t('orders.payment_method') %></th> -->
+					<th class=""><%= t('orders.amount') %></th>
+					<th class=""><%= t('orders.actions') %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @orders.each do |order| %>
+					<%= render :partial => "order", :locals => { :order => order } %>
+				<% end %>
+			</tbody>
+		</table>
+	
+  <%#= will_paginate @orders, :class => "dataTables_paginate paging_bootstrap pagination" %>
+</div>
+
+<% if params[:status].to_s == "processing" %>
+	<a class="ssw_preview-data vertical-text" id="preview-supplier-data">	<i class="icon-cog icon-white"></i><%= t('orders.preview_supplier_data') %></a>
+	<div class="modal fade" style="" id="modalPreviewSupplierData"></div>
+	<a data-toggle="modal" data-backdrop="static" href="#modalPreviewSupplierData" id="trigger-modal-preview"  class="hide"></a>
+<% end %>
+
+<script>
+	$(function() {
+		
+		$(".checkbox_all").click(function() {
+			if ($(".checkbox_all").is(':checked'))
+				$("input[type=checkbox]").attr('checked', 'checked');
+			else
+				$("input[type=checkbox]").removeAttr('checked');
+		});
+		
+		$(".btn-mgorder-actions").click(function() {
+			action = $("#order-actions option:selected").val();
+			if (action == "") {
+				alert("Please select an action");
+				return false;
+			}else{
+				if ($("input[type=checkbox]:checked").length ==0) {
+					alert("Please select an order.");
+					$("#order-actions").val('');
+					return false;
+			  }else{
+			  	cloned_table = $("#orders-list").clone();
+			  	$("#orders-list-form").html = "";
+			  	$("#orders-list-form").append(cloned_table);
+          $("#mark-as").val($("#order-actions").val());
+			  	var ans = confirm("Are you sure you want to proceed?");
+			  	if (!ans){
+						return false;
+					}else{
+			  		var send_email = confirm("Do you want to send an email notification to the customer(s)?");
+			  		if (send_email) {
+			  			$("#send-email").val('1');
+			  		}else{
+			  			$("#send-email").val('0');
+			  		}
+						$("#loader").show();
+						$("#orders-list-form").submit();
+					}
+			  }
+			}
+		});
+	})
+</script>

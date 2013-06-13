@@ -1,0 +1,16 @@
+<% unless @supplier.errors.empty?%>
+  html = '<div class="alert alert-error">';
+  html += "<a class='close' data-dismiss='alert'>×</a>";
+  <% @supplier.errors.keys.each do |k| %>
+  	html += "<%= k.to_s.capitalize %> <%= @supplier.errors[k].first %> <br/>";
+  <% end %>
+  html += '</div>';
+  $("#supplier-errors").empty();
+  $("#supplier-errors").append(html);  
+<% else %>
+//	$("#editsite-form form")[0].reset();
+//	$("#editsite-form").slideUp(300).delay(800).fadeOut(400);
+//	$("#editsite-form").remove();
+	$.sticky("Supplier successfully updated.", {autoclose : 5000, position: "top-right", type: "st-success" });
+	OC.getSuppliers();
+<% end%>

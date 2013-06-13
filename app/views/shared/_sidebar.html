@@ -1,0 +1,288 @@
+
+			<!-- sidebar -->
+        <a href="javascript:void(0)" class="sidebar_switch on_switch ttip_r" title="<%= t(:hide_sidebar) %>"><%= t(:sidebar_switch) %></a>
+        <div class="sidebar">
+
+				<div align="center"><%= span_loader("loader")%></div>				
+				<div class="antiScroll">
+					<div class="antiscroll-inner">
+						<div class="antiscroll-content">
+					
+							<div class="sidebar_inner">
+<% if can? :update, IscOrder %>
+								<%= form_tag orders_path(:status => "All"), :remote => true, :method => :get, :id => "global-search-form", :class => "input-append" do %>
+									<input autocomplete="off" name="q" class="search_query input-medium" size="16" type="text" placeholder="Search Order ID..." />
+                  <button type="submit" class="btn global-search-order-btn"><i class="icon-search"></i></button>
+									<select name="site_id" id="site_id" class="input-medium" style="width: 160px; !important" required>
+										<option value=""><%= t(:select_site) %></option>
+										<% current_user.sites.each do |site| %>
+										<option value="<%= site.id %>"><%= site.sitename %></option>
+										<% end %>
+									</select>
+								<% end %>
+<% end %>
+
+								<div id="side_accordion" class="accordion">
+												
+									<% if can? :update, IscOrder %>						
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="#collapseThree" data-parent="#side_accordion" data-toggle="collapse" class="accordion-toggle">
+												<i class="icon-shopping-cart"></i> <%= t(:iscorders) %>
+											</a>
+										</div>
+										<div class="accordion-body collapse" id="collapseThree">
+											<div class="accordion-inner">
+												<ul class="nav nav-list">
+													<li><%= link_to "Orders", orders_path(:site_id => (current_user.sites.first.id rescue ''), :status => "Paid"), :remote => true, :class => "sidebar-menu" %></li>
+													<!--
+													<li><%= link_to "Unpaid", unpaid_orders_path, :remote => true %></a></li>
+													<li><%= link_to "Paid", paid_orders_path, :remote => true %></a></li>
+													<li><%= link_to "Submitted", submitted_orders_path, :remote => true %></a></li>
+													<li><%= link_to "Partially shipped", partial_orders_path, :remote => true %></a></li>
+													<li><%= link_to "Shipped", shipped_orders_path, :remote => true %></a></li>
+													-->
+												</ul>
+												
+											</div>
+										</div>
+									</div>
+
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="#collapseMagento" data-parent="#side_accordion" data-toggle="collapse" class="accordion-toggle">
+												<i class="icon-shopping-cart"></i> Magento
+											</a>
+										</div>
+										<div class="accordion-body collapse" id="collapseMagento">
+											<div class="accordion-inner">
+												<ul class="nav nav-list">
+													<li><%= link_to "Orders", magento_orders_path(:site_id => 18, :status => "processing"), :remote => true, :class => "sidebar-menu" %></li>
+												</ul>
+												
+											</div>
+										</div>
+									</div>
+									
+									<% end %>
+									
+									
+									
+									<% if can? :read, Product %>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="#collapseFour" data-parent="#side_accordion" data-toggle="collapse" class="accordion-toggle">
+												<i class="icon-th"></i> <%= t('products.text') %>
+											</a>
+										</div>
+										<div class="accordion-body collapse" id="collapseFour">
+											<div class="accordion-inner">
+												<ul class="nav nav-list">
+													<li><%= link_to t('products.products_list'), products_path, :remote => true, :class => "sidebar-menu" %></li>
+													<li><%= link_to t('supplier_products.text'), supplier_products_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<li><%= link_to t('products.ws_products_list'), cart_middle_layer_products_path, :remote => true, :class => "sidebar-menu" %></li>
+													<li><%= link_to t('shop_products.text'), shop_products_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<li class="nav-header">Actions</li>
+
+													<% if can? :create, Product %>
+													<li><%= link_to t('products.insert'), insert_products_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<li><%= link_to t('products.add'), new_product_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<li><%= link_to t('products.add_bundle'), newbundle_products_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<li><%= link_to t('products.add_combi'), newcombi_products_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<li><%= link_to t('products.new_cart_product'), new_cart_product_products_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<% end %>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<% end %>
+
+									<% if can? :read, Supplier %>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="#collapseFive" data-parent="#side_accordion" data-toggle="collapse" class="accordion-toggle">
+												<i class="icon-th-list"></i> <%= t('suppliers') %>
+											</a>
+										</div>
+										<div class="accordion-body collapse" id="collapseFive">
+											<div class="accordion-inner">
+												<ul class="nav nav-list">
+													<li><%= link_to "Suppliers list", suppliers_path, :remote => true, :class => "sidebar-menu" %></li>
+													<% if can? :create, Supplier%>
+													<li><%= link_to "Add Supplier", new_supplier_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<% end %>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<% end %>
+									
+									<% if can? :read, Audit %>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="#collapseLong" data-parent="#side_accordion" data-toggle="collapse" class="accordion-toggle">
+												<i class="icon-list-alt"></i> <%= t('audit.text') %>
+											</a>
+										</div>
+										<div class="accordion-body collapse" id="collapseLong">
+											<div class="accordion-inner">
+												<ul class="nav nav-list">
+                          <li><%= link_to "Audit Log", audit_path, :remote => true, :class => "sidebar-menu" %></a></li>
+                        </ul>
+											</div>
+										</div>
+									</div>
+									<% end %>
+									
+									<% if can? :read, BankTransaction %>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="<%= banktransactions_path %>" data-remote="true" data-parent="#side_accordions"   class="accordion-toggle sidebar-menu">
+											   <i class="icon-tasks"></i> <%= t('banktransactions') %>
+											</a>
+										</div>
+									</div>
+									<% end %>
+
+									<% if can? :read, IscOrder %>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="<%= porders_path %>" data-remote="true" data-parent="#side_accordions"   class="accordion-toggle sidebar-menu">
+											   <i class="icon-tasks"></i> WS Orders
+											</a>
+										</div>
+									</div>
+									<% end %>
+
+									<% if can? :read, Site %>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="#collapseTwo" data-parent="#side_accordion" data-toggle="collapse" class="accordion-toggle">
+												<i class="icon-globe"></i> <%= t(:sites) %>
+											</a>
+										</div>
+										<div class="accordion-body collapse" id="collapseTwo">
+											<div class="accordion-inner">
+												<ul class="nav nav-list">
+													<li><%= link_to "Sites", sites_path, :remote => true, :class => "sidebar-menu" %></li>
+													<% if can? :create, Site %>
+													<li><%= link_to "Add Site", new_site_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<% end %>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<% end %>
+
+									<% if can? :read, User %>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="#collapseOne" data-parent="#side_accordion" data-toggle="collapse" class="accordion-toggle">
+												<i class="icon-user"></i> <%= t(:user_accts) %>
+											</a>
+										</div>
+										<div class="accordion-body collapse" id="collapseOne">
+											<div class="accordion-inner">
+												<ul class="nav nav-list">
+													<li><%= link_to "Users", users_path, :remote => true, :class => "sidebar-menu" %></li>
+													<% if can? :create, User %>
+													<li><%= link_to "Add User", new_user_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<% end %>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<% end %>
+									
+
+									<% if can? :read, System %>
+									<!--
+									<div class="accordion-group">
+                    <div class="accordion-heading">
+                      <a href="<%= systems_path %>" data-remote="true" data-parent="#side_accordions"   class="accordion-toggle sidebar-menu">
+                         <i class="icon-tasks"></i> <%= t('syst_env_status') %>
+                      </a>
+                    </div>
+                  </div>
+									-->
+									
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a href="#collapseAdmin" data-parent="#side_accordion" data-toggle="collapse" class="accordion-toggle">
+												<i class="icon-user"></i> Admin Stuffs
+											</a>
+										</div>
+										<div class="accordion-body collapse" id="collapseAdmin">
+											<div class="accordion-inner">
+												<ul class="nav nav-list">
+													<li><%= link_to "Pending Jobs", pendingjobs_admins_path, :remote => true, :class => "sidebar-menu" %></li>
+													<li><%= link_to t('syst_env_status'), systems_path, :remote => true, :class => "sidebar-menu" %></a></li>
+													<li><%= link_to "Order Processings", processings_admins_path, :remote => true, :class => "sidebar-menu" %></li>
+                          <li><%= link_to "Notes", notes_admins_path, :remote => true, :class => "sidebar-menu" %></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+
+                  <% end %>
+									
+								</div>
+								
+								<div class="push"></div>
+							</div>
+							
+							<% if can? :update, IscOrder %>
+							<div class="sidebar_info hide">
+								<%= span_loader("loader_totals") %>
+								<span class="" style="margin-left: 6px;">Site: <strong><span class="sidebar-site-default"><%= @site.sitename rescue '' %></span></strong></span>
+								<ul class="unstyled">
+									<li>
+										<span class="paid act act-warning"></span>
+										<strong>Paid Orders</strong>
+									</li>
+									<li>
+										<span class="submitted act act-success"></span>
+										<strong>Submitted Orders</strong>
+									</li>
+									<li>
+										<span class="shipped act act-success"></span>
+										<strong>Shipped Orders</strong>
+									</li>
+									<!--
+									<li>
+										<span class="sites act act-success"><%#= @total[:sites] rescue '' %></span>
+										<strong>Total Sites</strong>
+									</li>
+									<li>
+										<span class="users act act-danger"><%#= @total[:users] rescue '' %></span>
+										<strong>Total Users</strong>
+									</li>
+									-->
+								</ul>
+							</div>
+							<% end %>
+						
+						</div>
+					</div>
+				</div>
+			
+			</div>
+
+<% if can? :read, IscOrder %>
+<script>
+$(document).ready(function() {
+//	setInterval(function() {
+//	  OC.updateOrdersTotals();
+//	}, 20000);
+  $("#global-search-form").submit(function(){
+  	$("#loader").show();
+  })	
+})	
+
+$(".global-search-order-btn").live("click", function(){
+  $(this).attr("disabled", "disabled");
+  $("#global-search-form").submit();
+});  
+
+</script>            
+<% end %>

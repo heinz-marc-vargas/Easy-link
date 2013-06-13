@@ -1,0 +1,27 @@
+<h3 class="heading">WS ORDERS</h3>
+<div class="row-fluid">
+	<%= render :partial => "search", :locals => { :sites => @sites } %>
+	
+	<div style="clear:both"></div>
+		
+	<% if @orders.empty? %>
+		<p>No results found.</p>
+	<% else %>
+		<table class="table table-bordered mediaTable" id="orders-list">
+			<thead>
+				<tr>
+					<th class=""><%= t('orders.order_id') %></th>
+					<th class=""><%= t('orders.customer_name') %></th>
+					<th class=""><%= t('orders.customer_email')%></th>
+					<th class=""><%= t('orders.order_date') %></th>
+					<th class=""><%= t('orders.order_status') %></th>
+					<th class=""><%= t('orders.payment_method') %></th>
+					<th class=""><%= t('orders.amount') %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<%= render :partial => "order", :collection => @orders %>
+			</tbody>
+		</table>
+	<% end %>	
+</div>

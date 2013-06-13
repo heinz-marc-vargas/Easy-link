@@ -1,0 +1,8 @@
+$("#temp-content").empty();
+// update order address info
+id = "<%= @order.orderid %>";
+$("#order-header-"+ id + " .street_info").text('<%= params[:isc_order_address][:address_1] %> <%= params[:isc_order_address][:address_2] %>').fadeOut().fadeIn();
+$("#order-header-"+ id + " .city_info").text('<%= params[:isc_order_address][:city] %>').fadeOut().fadeIn();
+$("#order-header-"+ id + " .state_info").text('<%= params[:isc_order_address][:state] %>').fadeOut().fadeIn();
+$("#order-header-"+ id + " .zip_info").text('<%= params[:isc_order_address][:zip] %>').fadeOut().fadeIn();
+$("#order-header-"+ id + " .country_info").text('<%= params[:country_iso2] %>').fadeOut().fadeIn();

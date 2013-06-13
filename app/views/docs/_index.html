@@ -1,0 +1,36 @@
+<div class="row-fluid">
+	<div class="span6">
+		<h4 class="heading">Documentation</h4>
+	</div>	
+ 
+	<div class="clear"></div>
+	
+	<div class="span10">
+		<ul class="unstyled">
+			<%
+			fpath = Rails.root.join("public", "info")
+			Dir.foreach(fpath) do |f|
+			next if [".", "..", ".DS_Store"].include?(f.to_s)
+			
+			ext = f.to_s.split(".").last
+			
+			%>
+				<% if ["mp4", "mov"].include?(ext) %>
+					<li><h4><%= f.to_s %></h4></li>
+					<li>
+							<video id="video1" preload="auto" width="430" height="264" class="video-js vjs-default-skin" controls>
+							<source src="/info/<%= f.to_s %>" type="video/mp4">
+							Your browser does not support the video tag.
+							</video>
+							<br>
+							<a href="/info/<%= f.to_s %>">Click HERE if you cannot play the video</a>
+					</li>
+				<% else %>
+						<h4><a href="/info/<%= f.to_s %>"><%= f.to_s %></a></h4>
+				<% end %>
+				<br/><br/>
+			<% end %>
+		</ul>
+	</div>  
+
+</div>

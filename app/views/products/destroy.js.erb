@@ -1,0 +1,3 @@
+$("#product-row-<%= @product.id %>").fadeOut(500);
+$.sticky("Product successfully deleted.", {autoclose : 5000, position: "top-right", type: "st-success" });
+OC.getProducts();

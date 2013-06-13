@@ -1,0 +1,20 @@
+<% if (@threshold_data != nil) %>
+	<table>
+    <tr style="border-bottom:solid 1px black;">
+      <td><strong>SKU</strong></td>
+      <td style="padding-left:10px; padding-right:10px;"><strong>Product Name</strong></td>
+      <td style="padding-left:10px; padding-right:10px;" nowrap="nowrap"><strong>Threshold Qty</strong></td>
+      <td></td>
+    </tr>
+		<% @threshold_data.each do |sku, details| %>
+      <tr>
+        <td><%= sku %></td>
+        <td style="padding-left:10px; padding-right:10px;"><%= details[0] %></td>
+        <td style="padding-left:10px; padding-right:10px;" nowrap="nowrap"><%= details[1] %></td>
+        <td>
+          <%= details[2].html_safe %>
+        </td>
+      </tr>
+		<% end %>
+	</table>
+<% end %>

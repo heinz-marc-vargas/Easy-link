@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= Constant::APP_NAME %></title>
+    
+        <!-- Bootstrap framework -->
+            <link rel="stylesheet" href="/bootstrap/css/bootstrap.css" />
+            <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.min.css" />
+        <!-- gebo blue theme-->
+            <link rel="stylesheet" href="/stylesheets/blue.css" id="link_theme" />
+        <!-- breadcrumbs-->
+            <link rel="stylesheet" href="/lib/jBreadcrumbs/css/BreadCrumb.css" />
+        <!-- tooltips-->
+            <link rel="stylesheet" href="/lib/qtip2/jquery.qtip.min.css" />
+        <!-- colorbox -->
+            <link rel="stylesheet" href="/lib/colorbox/colorbox.css" />    
+        <!-- code prettify -->
+            <link rel="stylesheet" href="/lib/google-code-prettify/prettify.css" />    
+        <!-- notifications -->
+            <link rel="stylesheet" href="/lib/sticky/sticky.css" />    
+        <!-- splashy icons -->
+            <link rel="stylesheet" href="/img/splashy/splashy.css" />
+				<!-- datepicker -->
+            <link rel="stylesheet" href="/lib/datepicker/datepicker.css" />            
+		<!-- flags -->
+            <link rel="stylesheet" href="/img/flags/flags.css" />	
+		<!-- calendar -->
+            <link rel="stylesheet" href="/lib/fullcalendar/fullcalendar_gebo.css" />
+				<!-- 2col multiselect -->
+            <link rel="stylesheet" href="/lib/multiselect/css/multi-select.css" />            
+				<!-- enhanced select -->
+            <link rel="stylesheet" href="/lib/chosen/chosen.css" />
+			<!-- tooltips-->
+      	    <link rel="stylesheet" href="/lib/qtip2/jquery.qtip.min.css" />
+			<!-- wizard -->
+            <link rel="stylesheet" href="/lib/stepy/css/jquery.stepy.css" />
+            
+        <!-- main styles -->
+            <link rel="stylesheet" href="/stylesheets/style.css" />
+            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans" />
+	
+        <!-- Favicon -->
+            <link rel="shortcut icon" href="/favicon.ico" />
+		
+        <!--[if lte IE 8]>
+        <link rel="stylesheet" href="/css/ie.css" />
+          <script src="/js/ie/html5.js"></script>
+			<script src="/js/ie/respond.min.js"></script>
+			<script src="/lib/flot/excanvas.min.js"></script>
+        <![endif]-->
+		
+		<%= csrf_meta_tag %>
+		<%= javascript_include_tag "jquery.min.js", "rails.js" %>
+		<%= javascript_include_tag "common" %>
+		
+	</head>
+	<body>
+		<div id="loading_layer" style="display:none"><img src="/img/ajax_loader.gif" alt="" /></div>
+		<div style="padding: 10px">
+			<%= yield %>
+		</div>
+	</body>
+</html>

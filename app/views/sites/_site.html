@@ -1,0 +1,10 @@
+			<tr id="site-row-<%= site.id%>">
+				<td><%= site.sitename %></td>
+				<td><%= site.code %></td>
+				<td><%= site.url %></td>
+				<td><%= site.hostname %></td>
+				<td>
+					<a href="#" class="edit-site" data-id="<%= site.id %>" title="Edit"><i class="splashy-document_letter_edit"></i></a>
+					<%= link_to raw("<i class='splashy-gem_remove'></i>"), site_path(site), :confirm => "Are you sure you want to delete this record?", :method => :delete, :remote => true, :title => "Delete" %>
+				</td>
+			</tr>

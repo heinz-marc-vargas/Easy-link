@@ -1,0 +1,98 @@
+<div class="pull-right close-details" style="cursor:pointer" data-id="<%= @order['increment_id']%>"><i class="icon-remove"></i></div>
+<h3 class="heading2">Edit Shipping details </h3>
+<%= span_loader("shipping#{@order['increment_id']}") %>
+
+<div style="background-color: #FFF !important; padding: 6px;">
+
+	<%= form_for :test, :url => update_shipping_magento_order_path(@order['increment_id'], :format => :js), :remote => true, :html => { :class => "bs-docs-example form-horizontal shipping-form"} do |f| %>
+		<%= hidden_field_tag :order_address_id, @order['shipping_address']['address_id'] %>
+
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Email</label>
+		  <div class="controls">
+		    <div class="span5">
+		    	<label class="">First name:</label>
+		    	<%= text_field_tag :first_name, @order['shipping_address']['firstname'], :class => "span10"  %>
+		    </div>
+		    <div class="span5">
+		    	<label class="">Last name:</label>
+		    	<%= text_field_tag :last_name, @order['shipping_address']['lastname'], :class => "span10" %>
+		    </div>
+		  </div>
+		</div>
+				
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Ship To:</label>
+		  <div class="controls">
+		    <div class="span5">
+		    	<label class="">Address 1:</label>
+		    	<%= text_field_tag :street, @order['shipping_address']['street'], :class => "span10" %>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="control-group">
+		  <div class="controls">
+		    <div class="span5">
+		    	<label class="">City:</label>
+		    	<%= text_field_tag :city, @order['shipping_address']['city'], :class => "span10"  %>
+		    </div>
+		    <div class="span5">
+		    	<label class="">State:</label>
+		    	<%= text_field_tag :state, @order['shipping_address']['region'], :class => "span10"  %>
+		    </div>
+		  </div>
+		</div>
+		
+		<div class="control-group">
+		  <div class="controls">
+		    <div class="span5">
+		    	<label class="">Zip code:</label>
+		    	<%= text_field_tag :zip, @order['shipping_address']['postcode'], :class => "span10"  %>
+		    </div>
+		    <div class="span5">
+		    	<label class="">Country code:</label>
+		    	<%= @order['shipping_address']['country_id'] %>
+		    </div>
+		  </div>
+		</div>
+			
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Email</label>
+		  <div class="controls">
+		    <div class="span5">
+		       <input class="span10" name="email" type="text" value="<%= @order['customer_email'] rescue "N/A" %>">
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group">
+		  <label class="control-label" for="inputIcon">Phone Number:</label>
+		  <div class="controls">
+		    <div class="span5">
+		       <input class="span10" name="telephone" type="text" value="<%= @order['shipping_address']['telephone'] rescue "N/A" %>">
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group">
+	    <div class="controls">
+	      <button type="submit" class="btn btn-gebo">Save changes</button>
+	      <a href="javascript:void(0)" class="btn cancel-btn-shipping" mage="1" data-id="<%= @order['increment_id'] %>">Cancel</a>
+	    </div>
+	  </div>
+	
+	<% end %>
+	
+</div>
+
+<script>
+	$(function() {
+		$(".shipping-form").submit(function() {
+			$("#shipping" + "<%= @order['increment_id'] %>").show();
+		});
+		
+		$('#shippingdate').datepicker();
+		$('#dp1').datepicker();
+	})
+</script>

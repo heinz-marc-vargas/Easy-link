@@ -1,0 +1,57 @@
+<div class="pull-right close-details" style="cursor:pointer" data-id="<%= @isc_order.orderid%>"><i class="icon-remove"></i></div>
+<h3 class="heading2">Shipping details [ <%= link_to "Edit", edit_shipping_order_path(@isc_order), :remote => true, :class => "edit-shipping-details", "data-id" => @isc_order.orderid %> ]</h3>
+<%= span_loader("shipping#{@isc_order.orderid}") %>
+
+
+<div style="background-color: #FFF !important; padding: 3px;">
+	
+	<form class="bs-docs-example form-horizontal">
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Ship To:</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		      <%= "#{@isc_order.isc_order_address.first_name} #{@isc_order.isc_order_address.last_name}".camelize rescue "N/A" %> <br/>
+		  		<%= convert_multi_to_single_byte_alpha_num(@isc_order.isc_order_address.address_1) rescue "N/A" %><br /><%= convert_multi_to_single_byte_alpha_num(@isc_order.isc_order_address.address_2) rescue "N/A" %> <br/>
+		  		<%= "#{@isc_order.isc_order_address.city}, #{@isc_order.isc_order_address.state}, #{@isc_order.isc_order_address.zip} " rescue "N/A" %> <%= @isc_order.isc_order_address.country_iso2 rescue "N/A"%>
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Email</label>
+		  <div class="controls">
+		    <div class="control-label2 ">
+		       <%= @isc_order.isc_order_address.email rescue "N/A" %>
+		    </div>
+		  </div>
+		</div>
+	
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Phone Number:</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		       <%= convert_multi_to_single_byte_alpha_num(@isc_order.isc_order_address.phone) rescue "N/A" %>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Shipping Cost:</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		       <%= @isc_order.shipping_cost_inc_tax %>
+		    </div>
+		  </div>
+		</div>
+		
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Shipping Date:</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		       <%= Time.at(@isc_order.orddateshipped).to_formatted_s(:long) rescue "N/A" %>
+		    </div>
+		  </div>
+		</div>
+	</form>
+	
+</div>

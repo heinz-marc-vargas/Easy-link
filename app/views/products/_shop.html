@@ -1,0 +1,48 @@
+<div class="row-fluid">
+	<div class="span6">
+		<h3 class="heading"><%= t('shop_products.lists') %></h3>
+	</div>
+	
+	<%= render "search_shop" %>
+		<strong>Note: </strong> For Combi products, all the products should go to the same default supplier.
+	<table class="table table-bordered mediaTable" id="sites-list">
+		<thead>
+			<tr>
+				<th class="essential persist">Site name </th>
+				<th class="optional">ISC Product ID</th>
+				<th class="optional">Supplier Product Name</th>
+				<th class="essential">ISC Product Name</th>
+				<th class="essential">Default Supplier</th>
+				<th class="essential">Bundle Qty</th>
+				<th class="essential">Expiry date</th>
+				<th class="essential">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% prevrow = ""
+			   newrow = "" 
+			   trclass = ""
+			   changed = false
+			%>
+
+			<% @products.each do |shop_product| %>
+				<%
+				if shop_product.isc_product_id.nil?
+				  changed = true
+				  newrow = ""
+				  prevrow = ""
+        else
+				  newrow = "#{shop_product.site_id}:#{shop_product.isc_product_id}"
+				  changed = (newrow == prevrow) ? false : true
+				  prevrow = newrow
+			  end
+			  
+				 trclass = (trclass == "") ? "trbg" : ""  if changed
+				%>
+				<%= render :partial => "/products/shop_product", :locals => { :shop_product => shop_product, :trbackground => trclass } %>
+			<% end %>
+		</tbody>
+	</table>
+  <%= will_paginate @products, :class => "dataTables_paginate paging_bootstrap pagination" %>
+ 
+</div>

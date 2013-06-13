@@ -1,0 +1,16 @@
+OC.clearForms();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/users/index", :locals => { :users => @users }))%>');
+
+$(function() {
+	$('.pop_over').popover('destroy');	
+	oTableUsers = $('#dt_e').dataTable( {
+	  "bProcessing": true,
+	  "bServerSide": true,
+	  "sPaginationType": "bootstrap",
+	  "sAjaxSource": "/users.json",
+	  "fnDrawCallback": function( oSettings ) {
+	      $('.pop_over').popover();
+	    }
+	} );
+
+});

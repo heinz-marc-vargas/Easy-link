@@ -1,0 +1,61 @@
+<% unless @stock_data.empty? %>
+	<h4>Import Stocks Summary:</h4>
+	<table>
+		<tr style="border-bottom:solid 1px black;">
+			<td><strong>SKU</strong></td>
+			<td style="padding-left:10px; padding-right:10px;"><strong>Product Name</strong></td>
+			<td nowrap="nowrap"><strong>Stock Qty</strong></td>
+			<td>Comments</td>
+		</tr>
+
+		<% @stock_data.each do |sku, name_qty_product| %>
+			<% next if @expiring_sku.include? sku %>
+	    <tr id="product-line-<%= sku %>">
+	    	<td><%= sku %></td>
+				<td style="padding-left:10px; padding-right:10px;"><%= name_qty_product[0] %></td>
+				<td><%= name_qty_product[1] %></td>
+				<td >
+					<span style="color: red; font-style:italic;">
+				  	<%= (name_qty_product[2] == [])? "Product Record Not Found" : "" %> <%= (name_qty_product[2].count > 1)? "<strong>More than 1 product record, please check.</strong>".html_safe : "" %>
+				  </span>
+				  <% unless name_qty_product[2].empty? %>
+						<span id="show-note-form" class="btn-<%= sku %>" data-id="<%= sku %>">
+					  	<a href="" onclick="return false;"  title="Add a Note"><i class="splashy-comment"></i></a> 
+				  	</span>
+				  	<%= span_loader2(sku) %>
+				  	<div id="note-<%= sku %>" style="float: left; position: absolute; z-index: 150"></div>
+				  <% end %>
+				</td>
+			</tr>
+					
+			<% if (name_qty_product[3] != nil)%>
+	      <tr>
+	      	<td colspan="4"><%# name_qty_product[3].inspect %>
+						<% if (name_qty_product[3] == []) %>
+		              <span style="margin-left:20px; font-style:italic; color:#93554C;">No similar products found.</span>
+						<% else %>
+							  <table style="width:100%; margin-left:20px; font-style:italic; color:#93554C; border: solid 1px #93554C; margin:5px 5px 5px 5px;">
+							  	<tr>
+							  		<td colspan="4" style="padding-left:5px; text-decoration:underline;"><strong>Do You Mean?</strong></td>
+							  	</tr>
+									<% name_qty_product[3].each do |alt_prod| %>
+					          <tr>
+					          	<td style="padding-left:5px;"><strong>Product Name:</strong> <%= alt_prod.name %></td>
+											<td style="padding-left:10px; padding-right: 10px;"><strong>SKU / Product ID:</strong> <%= alt_prod.ext_product_id %></td>
+											<td><strong>Current Stock:</strong> <%= alt_prod.stock %></td>
+											<td>
+												<div id="supplier_product_edit">
+					                <a id="show-panel-sp2" href="#" class="<%= alt_prod.id%>" title="Edit Supplier Product"><i class="splashy-pencil"></i></a>
+					                
+					              </div>
+											</td>
+					          </tr>
+									<% end %>
+								</table>
+						<% end %>
+					</td>
+				</tr>
+			<% end %> 
+ 	 <% end %>
+	</table>
+<% end %>

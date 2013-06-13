@@ -1,0 +1,8 @@
+<% if @error.nil? %>
+OC.clearForms();
+$.sticky("Successfully insert product.", {autoclose : 5000, position: "top-right", type: "st-success" });
+$("#loader").show();
+$.get("/products/shop.js");
+<% else %>
+$.sticky("<%= @error.to_s %>", {autoclose : 5000, position: "top-right", type: "st-error" });
+<% end %>

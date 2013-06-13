@@ -1,0 +1,27 @@
+</br>
+<%= form_tag cart_middle_layer_products_path, :remote => true, :method => :get do %>
+<div class="row-fluid">
+  <div class="span7">
+    <div class="input-append">
+      <select name="site_id" class="span3">
+        <% @sites.each do |site|%>
+        <option value="<%= site.id%>" <%= session[:site_id].to_i == site.id ? "selected" : '' %>><%= site.sitename %></option>
+        <% end %>
+      </select>    
+      <input type="text" name="q" size="16" value="<%= params[:q] rescue ''%>" class="span4"  placeholder="Product name / ID">
+      <button type="submit" class="btn btn-success">Search</button>
+    </div>
+  </div>
+  <div class="span5">
+  <div class="pull-right">
+    <select name="per_page" style="width: 100px">
+      <option value="10" <%= params[:per_page].to_i == 10 ? "selected" : '' %>>10 per page</option>
+      <option value="25" <%= params[:per_page].to_i == 25 ? "selected" : '' %>>25 per page</option>
+      <option value="50" <%= params[:per_page].to_i == 50 ? "selected" : '' %>>50  per page</option>
+      <option value="100" <%= params[:per_page].to_i == 100 ? "selected" : '' %>>100  per page</option>
+    </select>
+  </div>
+</div>
+  
+</div>
+<% end %>

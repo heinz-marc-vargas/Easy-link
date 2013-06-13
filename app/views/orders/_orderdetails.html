@@ -1,0 +1,98 @@
+<div style="background-color: #FFF !important; padding: 6px;">
+	
+	<table class="table table-bordered smalltable">
+		<thead>
+			<tr>
+				<th>Product ID</th>
+				<th>Product SKU</th>
+				<th>Product Name</th>
+				<th>Quantity
+					<div class="pull-right close-details" style="cursor:pointer" data-id="<%= @isc_order.orderid%>"><i class="icon-remove"></i></div>
+					</th>
+			</tr>
+		</thead>
+	
+		<tbody>
+			<% @order_products.each do |ordprod| %>
+				<tr>
+					<td><%= ordprod.orderprodid rescue "" %> ++ <%= ordprod.ordprodid rescue "" %></td>
+					<td><%= ordprod.ordprodsku %></td>
+					<td><%= ordprod.ordprodname %> <%= (ordprod.product_variation != "")? ("( " + ordprod.product_variation + " )") : "" %></td>
+					<td><%= ordprod.ordprodqty %></td>
+				</tr>
+	
+				<% ordprod.shop_products(session[:site_id]).each do |sp| %>
+				<tr>					
+					<td colspan="4" style="padding-left: 50px !important">
+						<i class="icon-share-alt"></i> &nbsp; &nbsp;
+						<%= sp.product.id %>
+						<%= space(5) %>
+						<%= sp.product.name %>
+						<%= space(5) %>
+						Quantity to order from supplier: 
+						<%= sp.bundle_qty.to_i * ordprod.ordprodqty.to_i %>
+					</td>
+				</tr>
+				<% end %>
+			<% end %>
+		</tbody>
+	</table>
+
+	<% @orders_to_suppliers.each do |ots| %>
+		<strong>Sent Order Product ID:</strong> <%= ots.product_ids %> <%= space(5) %> 
+		<strong>Sent Date:</strong> <%= format_date(ots.created_at, "yyyy-mm-dd") %> <br/>
+		<% if ots.oc_version == "2" %>
+			<%= ots.order_string[:order_params] %>
+		<% else %>
+			<%= ots.order_string %>
+		<% end %>
+		<br/>
+		<strong>Response:</strong> <%= response_success?(ots) ? "Success" : "Failure"%>
+                - <%= ots.response_status.to_s %>
+		<br/><br/>
+	<% end %>
+
+        <% unless @isc_order.isc_shipment_datas.empty? %>
+        <strong>Shipment Data: </strong>
+        <br/>
+	<% @isc_order.isc_shipment_datas.each do |shipment| %>
+        Product Code: <%= shipment.ext_product_id %>  Shipped Qty: <%= shipment.qty_shipped %>    Ship Date: <%= format_date(shipment.ship_date, 'MdY') %>    Tracking Number: <%= shipment.tracking_num %>
+   Shipping xls: <%= shipment.file_name %>    Uploaded On: <%= format_date(shipment.created_at, 'MdY-time') %>
+        <br/>
+	<% end %>
+	<% end %>
+	
+	<h5>Notes</h5>
+	<%= form_tag setnotes_order_path(@isc_order, :site_id => session[:site_id]), :class => "setnotes-form", :id => "setnotes-form-#{@isc_order.orderid}", "data-id" => @isc_order.orderid, :remote => true do %>
+	<%= text_area_tag "order_notes", @isc_order.ordnotes, :class => "span8", :id => "order_notes_#{@isc_order.orderid}"%>
+	<button class="btn btn-gebo" type="submit" data-id="<%= @isc_order.orderid %>">Update Notes</button>
+	<%= span_loader("loader-setnotes-#{@isc_order.orderid}") %>
+	<span class="saved hide <%= @isc_order.orderid%>-save-notes">Saved</span>
+	<% end %>
+
+	<% if @isc_order.deleted? %>
+		<%= form_tag undelete_order_path(@isc_order, :site_id => session[:site_id]), :remote => true, :id => "undeleted-#{@isc_order.orderid}" do %>
+		<%= text_field_tag "notes", nil, :required => true, :placeholder => "Reason why you undelete this Order", :class => "span6" %>
+
+		<select name="status" style="width: 100px">
+			<% IscOrder::STATUS.keys.each do |stat|%>
+			  <% next if ["Deleted", "All"].include? stat %>
+				<option value="<%= stat%>" <%= params[:status] == stat ? "selected" : '' %>><%= stat %></option>
+			<% end %>
+		</select> 			
+		
+		<%= submit_tag "UnDelete", :id => "undelete", :class => "btn btn-gebo" %>
+		<% end %>
+	<% end %>	
+</div>
+
+<script>
+$(function() {
+	$(".setnotes-form").submit(function(){
+		$("#loader").show();
+	})
+		
+	
+});
+
+</script>

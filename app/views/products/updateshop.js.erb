@@ -1,0 +1,14 @@
+<% unless @shopproduct.errors.empty?%>
+  html = '<div class="alert alert-error">';
+  html += "<a class='close' data-dismiss='alert'>×</a>";
+  <% @shopproduct.errors.values.each do |msg| %>
+  	html += "<%= msg.first %> <br/>";
+  <% end %>
+  html += '</div>';
+  $("#product-errors").empty();
+  $("#product-errors").append(html);  
+<% else %>
+	OC.clearForms();
+	$.sticky("Shop Product successfully updated.", {autoclose : 5000, position: "top-right", type: "st-success" });
+	OC.getShopProducts();
+<% end%>

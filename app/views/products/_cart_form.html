@@ -1,0 +1,58 @@
+<%
+if @isc_products.new_record?
+  upath = insert_to_middle_layer_products_path
+  btn_string = "Add"
+else
+  upath = insert_to_middle_layer_products_path(@isc_products)
+  btn_string = "Save changes"
+end
+%>
+
+<%= form_for :isc_product, :url => upath, :remote => true, :method => :post, :html => { :class => "form-horizontal"} do |f| %>
+	<%#= hidden_field_tag "from", params[:from] %>	
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword">WS Product ID: &nbsp;</label>
+    <div class="controls">
+      <%= f.text_field :productid %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label span3" for="inputEmail">WS Product name: &nbsp;</label>
+    <div class="controls">
+      <%= f.text_field :prodname %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword">WS Product Code: &nbsp;</label>
+    <div class="controls">
+      <%= f.text_field :prodcode %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword">Sites: &nbsp;</label>
+    <div class="controls span7">
+			<% site_ids = @sites.map(&:id) %>
+    	<% @sites.each do |site| %>
+      <label class="checkbox inline span5">
+	      <input type="checkbox" class="product_sites" value="<%= site.id %>" name="sites[]" <%= site_ids.include?(site.id) ? "checked" : '' %> ><%= site.sitename %> (<%= site.site_url %>)
+	    </label>
+	    <% end %>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-gebo"><%= btn_string %></button>
+      <a href="#" class="btn" id="button-addproduct-cancel">Cancel</a>
+    </div>
+  </div>
+<% end %>
+<br/><br/>
+<script>
+$(function(){
+  $(".chzn_a").chosen({
+		allow_single_deselect: true
+  });
+  $(".chzn_b").chosen();
+});
+</script>

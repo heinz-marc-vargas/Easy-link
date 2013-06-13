@@ -1,0 +1,17 @@
+<% unless @site.errors.empty?%>
+  html = '<div class="alert alert-error">';
+  html += "<a class='close' data-dismiss='alert'>×</a>";
+  <% @site.errors.values.each do |msg| %>
+  	html += "<%= msg.first %> <br/>";
+  <% end %>
+  html += '</div>';
+  $("#site-errors").empty();
+  $("#site-errors").append(html);  
+<% else %>
+	$("#editsite-form form")[0].reset();
+	$("#editsite-form").slideUp(300).delay(800).fadeOut(400);
+	$("#editsite-form").remove();
+	$.sticky("<%= :site.to_s.titleize %> <% :successfully_updated %>.", {autoclose : 5000, position: "top-right", type: "st-success" });
+	OC.getSites();
+	oTableSites.fnDraw();
+<% end%>

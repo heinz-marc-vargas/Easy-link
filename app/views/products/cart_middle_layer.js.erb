@@ -1,0 +1,2 @@
+OC.clearForms();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/products/cart_middle_layer", :locals => { :isc_products => @isc_products }))%>');

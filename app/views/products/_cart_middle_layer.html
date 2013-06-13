@@ -1,0 +1,37 @@
+<div class="row-fluid">
+	<div class="span6">
+		<h3 class="heading"><%= t('products.ws_products_list') %></h3>
+	</div>
+	
+	<%= render "search_cart" %>
+	
+	<table class="table table-bordered mediaTable" id="sites-list">
+		<thead>
+			<tr>
+				<th class="optional">Cart Product ID</th>
+				<th class="essential">Cart Product Name</th>
+				<th class="essential">Cart Product SKU</th>
+				<th class="essential">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+<%
+  @isc_products.each do |isc_product|
+	trclass = cycle("trbg" , "")
+%>
+			<tr id="product-row-<%= isc_product.productid%>" class="<%=trclass%>">
+				<td><%= isc_product.productid %></td>
+				<td><%= isc_product.prodname %></td>
+				<td><%= isc_product.prodcode %></td>
+				<td>
+					<%= link_to raw("<i class='splashy-document_letter_edit'></i>"), editcart_product_path(isc_product), :remote => true, :title => "Edit" %> 
+					<%= link_to raw("<i class='icon-adt_trash'></i>"), deletecart_product_path(isc_product), :confirm => "Are you sure you want to delete this record?", :method => :delete, :remote => true, :title => "Delete" %>
+				</td>
+			</tr>
+<%
+  end
+%>
+		</tbody>
+	</table>
+	<%= will_paginate @isc_products, :class => "dataTables_paginate paging_bootstrap pagination" %>
+</div>

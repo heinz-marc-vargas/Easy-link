@@ -1,0 +1,35 @@
+<%#= @audits.inspect %>
+
+<div class="row-fluid">
+  <div class="span6">
+    <h3 class="heading"><%= t('audit.log') %></h3>
+  </div>
+  <div>
+    Search
+  </div>
+  <table class="table table-striped table-bordered mediaTable" id="audits-list">
+    <thead>
+      <tr>
+        <th class="essential persist">Action </th>
+        <th class="essential">Model</th>
+        <th class="essential">Record ID</th>
+        <th class="essential">User ID</th>
+        <th class="essential">User Type</th>
+        <th class="essential">Date Time</th>
+      </tr>
+    </thead>
+    <tbody>
+<%
+  @audits.each do |audit_record|
+%>
+    <%= render :partial => "audit_record", :locals => { :audit_record => audit_record } %>
+    <%= render :partial => "audit_object", :locals => { :audit_record => audit_record } %>
+<%
+  end
+%>
+    </tbody>
+  </table>
+  <%= will_paginate @audits, :class => "dataTables_paginate paging_bootstrap pagination" %>
+
+</div>
+<%= javascript_include_tag 'audit_log.js' %>

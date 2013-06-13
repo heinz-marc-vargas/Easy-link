@@ -1,0 +1,33 @@
+<%
+if @supplier.new_record?
+  upath = suppliers_path
+  btn_string = "Add"
+else
+  upath = supplier_path(@supplier)
+  btn_string = "Save changes"
+end
+%>
+
+<%= form_for :supplier, :url => upath, :remote => true, :method => :post, :html => { :class => "form-horizontal"} do |f| %>	
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">Supplier name:</label>
+    <div class="controls">
+      <%= f.text_field :company_name %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">Description:</label>
+    <div class="controls">
+      <%= f.text_field :description, :class => "span12" %>
+    </div>
+  </div>
+
+  
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-gebo"><%= btn_string%></button>
+      <a href="#" class="btn" id="btn-cancel">Cancel</a>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,3 @@
+$(".main_content").fadeOut();
+$("#loader").show();
+$.get("/magento_orders?site_id=<%= params[:site_id]%>&status=<%= params[:status] %>");

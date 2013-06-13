@@ -1,0 +1,158 @@
+<%#= render("breadcrumbs", :status => "Pending") %>
+<div class="row-fluid">
+	<div class="span3">
+		<h4 class="heading">Re-Order : <%= @site.sitename %></h4>
+	</div>
+
+	<div class="span7">
+		<%= form_tag reorders_orders_path, :class => "well form-inline reorders-search-form", :method => :get, "data-remote" => true do %>
+			<div class="span11">
+			Search Order IDs : 
+			<%= text_field_tag "order_ids", params[:order_ids], :class => "span5", :placeholder => "30085615, 30085614" %>
+			Site : <%= select_tag "site_id", options_for_select(@sites,IscOrder.site_id), :class => "span3" %>
+			<button class="btn" style="padding-right:5px !important" type="submit">Search</button>
+			</div> 
+		<% end %>
+	</div>		
+</div>
+
+<%= form_tag send_reorders_orders_path, :class => "reorders-form", "data-remote" => true do %>
+<div class="row-fluid clearfix">
+	<div span 12>
+		<%= @orders.count %> Order(s) found.
+		
+		<% unless @orders.empty? %>
+			
+			<table class="table " data-rowlink="a" id="orders-list">
+				<thead>
+					<tr>
+						<th>Order ID</th>
+						<th>Customer name</th>
+						<th>Email</th>
+						<th>Order Date</th>
+						<th>Order Status</th>
+						<th>Payment Status</th>
+						<th>Amount</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				<% @orders.each do |order| 
+					shipment = IscShipment.get_shipment(order.orderid)
+					split_flag = OrderProcessing.get_reorder_split_flag(order.orderid)
+					reorder_split_flag = split_flag.nil? ? "" : "_#{split_flag}"
+					
+					order_and_flag = "#{order.orderid}#{reorder_split_flag}" 
+				%>
+					<tr style="height: 16px !important;">
+						<td style="border-top: none !important;height: 16px !important;">
+							<%= text_field_tag "order_ids[#{order_and_flag}]", order_and_flag,  :class => "span7 text-order-id", "reorder-id" => order_and_flag %>
+							<%= hidden_field_tag order_and_flag, order_and_flag %>
+						</td>
+						<td style="border-top: none !important;height: 16px !important;"><%= order.isc_customer.customer_name %></td>
+						<td style="border-top: none !important;height: 16px !important;"><%= order.isc_customer.custconemail%></td>
+						<td style="border-top: none !important;height: 16px !important;"><%= order.order_date %></td>
+						<td style="border-top: none !important;height: 16px !important;"><%= order.isc_order_status.statusdesc rescue '' %></td>
+						<td style="border-top: none !important;height: 16px !important;"><%= order.payment_method %> </td>
+						<td style="border-top: none !important;height: 16px !important;"><%= order.total_inc_tax.to_i %>
+							
+							<% if split_flag.nil? %>
+							<span style="float: right; text-align: right; position:fixed; margin-left: -55px; margin-top: 26px; background-color: #EDEDED" class="red">Not ordered before.</span>
+							<% end %>
+							
+						</td>
+					</tr>
+
+					<tr >
+						<td colspan="8"  style="border-top: none !important; border-bottom: 1px solid #DDD !important;">
+							<table style="border-collaps: cfollapse">
+								<% order.isc_order_products.each do |iop| 
+
+									sps = iop.shop_products(session[:site_id]) #ShopProduct.where("site_id = ? AND isc_product_id = ?", session[:site_id], iop.ordprodid)
+      						temp_roid_iop = order.orderid.to_s + ((split_flag != nil)? ('_' + split_flag) : "") + "-" + iop.orderprodid.to_s
+      						 
+									sps.each do |sp|
+	        					prod = sp.product
+
+										order_key = []
+										order_key << iop.orderprodid
+										order_key << prod.id
+										order_key << "#{order.orderid}#{reorder_split_flag}"
+										order_key = order_key.join("-") 
+
+										iop_info = "Product SKU: #{iop.orderprodid}" + raw(space_pipe)
+										iop_info += "Product Name: #{iop.ordprodname}" + raw(space_pipe)
+										iop_info += "Default: #{prod.supplier.company_name}"
+
+								%>
+									 	<tr class="pop_over fit-content" data-content="<%= raw(iop_info) %>" data-placement="top" data-original-title="Order Product ID: <%= iop.orderprodid %>" >
+											<td><input type="checkbox" name="checked_items[]" value="<%= order_key %>" checked /></td>
+                      <td><%= prod.id %> </td>
+                      <td><%= prod.name %> </td>
+                      <td><strong>SKU/ID:</strong> <%= prod.ext_product_id %> </td>
+                      <td><strong>Bundle Qty X Ordered Qty / Qty to Order:</strong> </td>
+                      <td>
+                      	<%= text_field_tag "orderqty[#{order_key}]", (sp.bundle_qty * iop.ordprodqty), :class => "span3"  %>
+                      	<%#= hidden_field_tag "orderprodids[]", iop.orderprodid %>
+                      	<%#= hidden_field_tag "order_ids[]", iop.isc_order.orderid %>
+                      	<%#= hidden_field_tag "product_ids[]", prod.id %>
+                      </td>
+                      <td><%= shipment.shiptrackno unless shipment.nil? %></td>
+                      <td>Supplier </td>
+                      <td>
+                      	<%= select("supplier", "#{order_key}", prod.get_suppliers.collect {|p| [ p.company_name, p.id ] }, { :selected => prod.supplier_id}, { :class => "supplier span12", :alt => sp.product_id }) %> &nbsp;
+                    	</td>
+                    	<% if iop.ordprodqty.to_i > Constant::MIN_SPLIT_LIMIT %>   
+											<td>
+												<strong>Split By Qty:</strong>
+											</td>
+                      <td>
+                      	<%= select("split_by", "#{order_key}", @split_by_values.collect {|spv| [ spv, spv ] }, { :selected => "--"}, { :class => "span12 split_by" }) %>
+                      </td>
+                      <% end %>
+
+										</tr>
+										
+									<% end %>
+								<% end %>
+							</table>
+						</td>
+					</tr>
+				<% end %>
+					
+				</tbody>
+			</table>		
+
+			<button type="submit" class="btn btn-inverse">Place Re-Order</button>		
+
+	<% end %>		
+	</div>
+</div>
+<% end %>
+
+<script>
+	$(function() {
+		$(".reorders-search-form").submit(function() {
+			if ($(".reorders-search-form input[type=text]").val() == "" )
+				return false;
+			$("#loader").show();
+		});
+
+		$(".reorders-form").submit(function() {
+			if ($(".reorders-form input[type=checkbox]:checked").length == 0){
+				alert("Please select product(s) you want to re-order.")
+				return false;
+			}else{
+				var ans = confirm("Are you sure you want to Re-Order these products?");
+				if (ans) {
+					return true;
+				}else {
+					return false;
+				}
+			}
+		});
+		
+
+		
+	})
+</script>

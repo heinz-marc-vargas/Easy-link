@@ -1,0 +1,52 @@
+<div class="row-fluid">
+	<div class="span4">
+		<h4 class="heading">Ordering Spreadsheets : (<%= @site.sitename %>)</h4>
+	</div>
+	<%= render("sublinks") %>
+
+	<div class="span4">
+		<%= form_tag spreadsheets_orders_path, :class => "well form-inline spreadsheets-search-form", :method => :get, "data-remote" => true do %>
+			Switch Site : <%= select_tag "site_id", options_for_select(@sites,IscOrder.site_id), :class => "span6" %>
+			<button class="btn btn-gebo" type="submit">Search</button>
+		<% end %>
+	</div>		
+</div>
+
+
+<div class="row-fluid">
+	<h3 class="heading">Westmead files</h3> 
+	<div class="span12 not_sortable">
+		<ul>
+		<% @dates_ots.keys.each do |d| %>
+			<% ots = @dates_ots[d].first %>
+			<% unless ots.nil? %>
+			<li>
+					<%= d %> &nbsp; <button class="btn btn-mini" onclick="OC.generateSheet('<%= ots.site_id%>','<%= d %>', this);" type="button">Generate .xls file</button>
+
+			</li>
+			<% end %>
+		<% end %>
+		</ul>
+		
+		<ul>
+			<% @spreadsheets.each do |sheet| %>
+			<li>
+				<%= link_to sheet.name, download_xls_orders_path(:id => sheet.id), :target => "_blank" %>&nbsp;
+				<%= link_to "(.CSV)", download_csv_orders_path(:id => sheet.id), :target => "_blank" %>&nbsp;
+				<% check_icon = raw("<i class=\"icon-eye-open\"></i>") %>
+				<%= link_to raw("#{check_icon} Check for missing order"), check_gen_xls_orders_path(:asset_id => sheet.id), :target => "_blank" %>
+                                &nbsp;
+				<%= link_to "Check customer name", check_custname_orders_path(:asset_id => sheet.id), :target => "_blank" %>
+			</li>
+			<% end %>
+		</ul>
+	</div>
+</div>
+
+<script>
+	$(function() {
+		$(".spreadsheets-search-form").submit(function(){
+			$("#loader").show();
+		})
+	})
+</script>

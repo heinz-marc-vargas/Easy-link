@@ -1,0 +1,4 @@
+$("#loader").show();
+$("#modalPreviewSupplierData").empty().append('<%= escape_javascript(render(:partial => "/orders/preview_data"))%>');
+$("#loader").hide();
+$("#trigger-modal-preview").trigger('click');

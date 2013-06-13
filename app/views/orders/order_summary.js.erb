@@ -1,0 +1,14 @@
+OC.clearForms();
+<% if @site.sitecode == Constant::PKY_CODE %>
+  $(".main_content").empty().append('<%= escape_javascript(render(:partial => "/orders/order_summary_mage"))%>');
+<% else %>
+  $(".main_content").empty().append('<%= escape_javascript(render(:partial => "/orders/order_summary"))%>');
+<% end %>
+
+$('#shippingdate').datepicker();
+
+$(function() {
+	$(".order-summary-search-form").submit(function(){
+		$("#loader").show();
+	})
+})

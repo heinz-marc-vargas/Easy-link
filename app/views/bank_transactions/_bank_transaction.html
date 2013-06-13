@@ -1,0 +1,58 @@
+<%
+style = ""
+if (bank_transaction.order_ids.nil? || bank_transaction.order_ids.blank?) && bank_transaction.transaction_amt > 0 && bank_transaction.other_sales_channel_id.nil?
+	style += "background-color: #FFFFCC;"
+elsif (bank_transaction.order_ids.nil? || bank_transaction.order_ids.blank?) && bank_transaction.transaction_amt < 0
+	style += "background-color: #CECECE;"
+end
+%>
+<tr id="BankTransaction-<%= bank_transaction.id %>" style="<%= style %>">
+  <td><%= text_field_tag "sequence_id[#{bank_transaction.id}]", bank_transaction.sequence_id, :class => "input-mini",  :style => "width: 27px; height: 10px !important;" %></td>
+  <td><%= text_field_tag "order_ids", bank_transaction.order_ids, :style => "width: 85px", :class => "bank_transaction_orderid", "data-id" => bank_transaction.id %>
+  	<%= span_loader2("orderid_btid_#{bank_transaction.id}") %>
+  </td>
+  <td><%= bank_transaction.bank_date %></td>
+  <td><%= bank_transaction.transaction_amt %></td>
+  <td><%= bank_transaction.balance %></td>
+	<td><%= bank_transaction.customer_notes %></td>
+  <td><%= bank_transaction.filename %></td>
+	<td><%= (bank_transaction.status_change_date != nil)? format_date(bank_transaction.status_change_date, 'yyyy-mm-dd') : "Status Unchanged" %></td>
+  <td>
+		<%
+		prev_trxn = @transactions.select { |bt| bt.sequence_id == (bank_transaction.sequence_id - 1) }
+		%>
+    <%= (prev_trxn != [])? (bank_transaction.balance.to_f - (prev_trxn[0].balance.to_f + bank_transaction.transaction_amt.to_f)) : "Previous Balance Not Found" %>
+  </td>
+  <td>
+		<% if (bank_transaction.order_ids != nil)
+    	total_amt = 0.0
+      bank_transaction.order_ids.split(",").each do |oid|
+      	#order = IscOrder.find(:all, :conditions => { :orderid => oid } )
+      	orders = @orders[oid.to_i]
+      	
+      	unless orders.nil?
+  	    	total_amt += orders.first.total_inc_tax.to_f unless orders.empty?
+  	    end
+    	end
+	  	payment_tally = (total_amt - bank_transaction.transaction_amt.to_f) %>
+    	<%= (payment_tally != 0.0)? (payment_tally * -1) : payment_tally %>
+		<% end %>
+  </td>
+
+	<% if session[:site_code].to_s == Constant::KX_CODE %>
+	<td>
+		<span class="saved hide channel-saved-<%= bank_transaction.id%>">Saved...</span>
+		<%= select("sales_channel", bank_transaction.id.to_s, @external_sales_channels.collect {|sc| [ sc.sales_channel_name, sc.id ] },
+                 { :selected => (bank_transaction.other_sales_channel_id rescue ""), :include_blank => "--" }, { :class => "sales_channel_select sales_channel_select_#{bank_transaction.id}", "data-id" => bank_transaction.id }) %>
+		<span id="status_span_sales_channel_<%= bank_transaction.id  %>"></span>
+	</td>
+	<% end %>  
+  <td>
+		<span id="show-comment-form" data-area="BankTransaction" class="btn-<%= bank_transaction.id %>" data-id="<%= bank_transaction.id %>">
+			<%= bank_transaction.staff_comments %>
+	  	<a href="" onclick="return false;"  title="Add a comment" ><i class="splashy-comment"></i></a> 
+	  </span>
+	  <%= span_loader2(bank_transaction.id) %>
+	  <div id="BankTransaction-holder-<%= bank_transaction.id %>" style="float: left; position: absolute; z-index: 150; margin-left: -180px"></div>
+  </td>
+</tr>

@@ -1,0 +1,23 @@
+<% if session[:site_id].to_i == 18 %>
+  $(".main_content").html('');
+  $.get("/magento_orders.js?site_id=<%= params[:site_id] %>&q=<%= params[:q] %>");
+<% else %>
+  OC.clearForms();
+  $(".main_content").empty().append('<%= escape_javascript(render(:partial => "/orders/index", :locals => { :orders => @orders }))%>');
+
+  <% if params[:status].to_s == "Paid"%>
+  $("#preview-supplier-data").click(function(){
+	$("#loader").show();
+    $.get("/orders/preview_data.js")
+    return false;
+  });
+  <% end %>
+
+  $("#orders-list img").attr("height", 15);
+<% end %>
+<% if params[:status].to_s == "Paid" %>
+  console.log("<%= params[:status] %>");
+  $(".paid-btn").addAttr("href", "/orders?status=Paid");
+  $(".paid-btn").addAttr("data-remote", "true");  
+<% end %>
+$(".global-search-order-btn").removeAttr("disabled");

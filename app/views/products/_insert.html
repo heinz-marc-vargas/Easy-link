@@ -1,0 +1,80 @@
+<div id="insertproduct-form" class="">
+	<div class="row-fluid">
+		<div class="span10">
+			<h3 class="heading">Insert Shop Product</h3>	
+		</div>
+	</div>
+
+
+<%= form_for :product, :url => insert_product_products_path, :remote => true, :method => :post, :html => { :class => "form-horizontal"} do |f| %>
+
+
+
+<div class="formSep">
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword">Sites: &nbsp;</label>
+    <div class="controls">
+      <select name="product[site_id]" id="site_id" data-placeholder="Choose a site" class="chzn_b" required>
+				<option value="">Choose a site</option>
+				<% current_user.sites.each do |site| %>
+				<option value="<%= site.id %>"><%= site.sitename %></option>
+				<% end %>
+			</select>
+    </div>
+  </div>
+	
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword">ISC Product ID: &nbsp;</label>
+    <div class="controls">
+      <%= f.text_field :isc_product_id, :required => "required"%>
+    </div>
+  </div>
+</div>
+
+
+
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword">Bundle Quantity: &nbsp;</label>
+    <div class="controls">
+      <%= f.text_field :qty, :required => "required", :number => "number" %>
+    </div>
+  </div>
+    
+  <div class="control-group">
+    <label class="control-label span3" for="inputPassword" >Associated Supplier Product:  &nbsp;</label>
+    <div class="controls">
+    	<select name="product[product_id]" id="product_as" data-placeholder="Choose a Product..." class="chzn_a">
+				<option value="">Choose a product(optional)</option>
+				<% @products.each do |prod| %>
+					<% unless @product_uid.nil?
+					     sel = @product_uid.id == prod.uid ? "selected" : ""
+					   else
+					     sel = ""
+					   end
+					%>   
+					<option value="<%= prod.id %>" <%= sel %>><%= prod.name.capitalize %></option>
+				<% end %>
+			</select>
+    </div>
+  </div>
+
+    
+  
+  
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-gebo">Insert Product</button>
+      <a href="#" class="btn" id="button-insertproduct-cancel">Cancel</a>
+    </div>
+  </div>
+<% end %>
+<br/><br/>
+<script>
+$(function(){
+  $(".chzn_a").chosen({
+		allow_single_deselect: true
+  });
+  $(".chzn_b").chosen();
+});
+</script>
+</div>

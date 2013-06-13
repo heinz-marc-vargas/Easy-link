@@ -1,0 +1,16 @@
+OC.clearForms();
+
+if ($("#addcombi-form").length == 0) {
+	$(".main_content").prepend('<%= escape_javascript(render(:partial => '/products/newcombi'))%>');
+  $("#addcombi-form").slideDown(300).delay(800).fadeIn(400);	
+}else{
+	$("#addcombi-form").slideDown(300).delay(800).fadeIn(400);
+}	
+
+$(".chzn_a").chosen({
+	allow_single_deselect: true
+});
+
+$(".chzn_b").chosen({
+	allow_single_deselect: true
+});

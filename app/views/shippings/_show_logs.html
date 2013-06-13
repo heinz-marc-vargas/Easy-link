@@ -1,0 +1,33 @@
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Order ID</th>
+			<th>Email</th>
+			<th>Site ID</th>
+			<th>Status</th>
+			<th>Log
+			<button type="button" class="close" data-id="<%= @isd.id %>" style="font-size: 18px !important" >×</button>
+			</th>
+		</tr>
+	</thead>			
+	
+	 <tbody>
+	 	<% @logs.each do |log| %>
+		  <tr>
+		  	<td><%= log.order_id %></td>
+		   	<td><%= log.email %> </td>
+		   	<td><%= log.site.company_name rescue '' %> </td>
+		   	<td>
+		   		<% if log.sent? %>
+		   			<span class="green">sent</span>
+		   		<% else %>
+		   			<span class="red">not sent</span>
+		   		<% end %>	   		 
+					<%= space_pipe %><%= link_to "Re-send", resend_notification_shipping_path(log), :onclick => "OC.resendNotification()", :remote => true%>
+		   	</td>
+		   	<td></td>
+		  <tr>
+		<% end %>
+	 </tbody>
+</table>	

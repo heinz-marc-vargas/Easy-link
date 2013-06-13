@@ -1,0 +1,50 @@
+<div class="pull-right close-details" style="cursor:pointer" data-id="<%= @isc_order.orderid%>"><i class="icon-remove"></i></div>
+<h3 class="heading2">Billing details</h3>
+
+<div style="background-color: #FFF !important; padding: 3px;">
+	
+	<div class="bs-docs-example form-horizontal billing-details-div">
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Customer Details :</label>
+		  <div class="controls">
+		    <div class="control-label2">
+		      <%= convert_multi_to_single_byte_alpha_num(@isc_order.isc_customer.custconfirstname + " " + @isc_order.isc_customer.custconlastname) rescue "N/A" %> <br/>
+		      <%= convert_multi_to_single_byte_alpha_num(@isc_order.ordbillstreet1) rescue "N/A" %> <%= convert_multi_to_single_byte_alpha_num(@isc_order.ordbillstreet2) rescue "N/A" %> <br/>
+		      <%= "#{@isc_order.ordbillsuburb}, #{@isc_order.ordbillstate}, #{@isc_order.ordbillzip  } " rescue "N/A" %> <%= @isc_order.ordbillcountrycode %>
+		    </div>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Email :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= @isc_order.isc_customer.custconemail rescue "N/A" %> </label>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Phone Number :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= convert_multi_to_single_byte_alpha_num(@isc_order.ordbillphone) rescue "N/A" %> </label>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Date Ordered :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= @isc_order.order_date %> </label>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">IP Address :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= @isc_order.ordipaddress %> </label>
+		  </div>
+		</div>
+		<div class="control-group formSep2">
+		  <label class="control-label" for="inputIcon">Payment Method :</label>
+		  <div class="controls">
+		    <label class="control-label2"><%= raw(@isc_order.orderpaymentmethod) %> </label>
+		  </div>
+		</div>
+	</div>
+ 
+
+</div>

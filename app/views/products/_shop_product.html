@@ -1,0 +1,53 @@
+<%
+if (!@show_mg_shop_products)
+	if shop_product.isc_product.nil?
+		unless shop_product.isc_product_id.nil?
+		  if shop_product.isc_product_id > 0
+		    IscOrder.reconfigure_db(shop_product.site_id)
+		    isc_prod = IscProduct.find(shop_product.isc_product_id)
+		    shop_product.isc_product = isc_prod
+		  end
+		end
+	end
+end
+
+default_supplier = ""
+unless shop_product.default_supplier_id.nil?
+	ds = Supplier.find(shop_product.default_supplier_id)
+	default_supplier = ds.company_name unless ds.nil?
+end
+
+default_id = shop_product.supplier_id
+suppliers = []
+
+    if shop_product.product.uid > 0
+      prods = Product.where("uid = ?", shop_product.product.uid)
+      supp_ids = prods.map(&:supplier_id).uniq
+      
+      supp_ids.each do |id|
+      	suppliers << @by_supplier_id[id].first
+      end
+    else
+      suppliers << @by_supplier_id[shop_product.product.supplier_id].first 
+    end
+
+    suppliers.collect!{|s| [ s.company_name, s.id ]}
+
+%>
+<tr id="product-row-<%= shop_product.id%>" class="<%=trbackground%>">
+	<td><%= shop_product.site.sitename  rescue ''%></td>
+	<td><%= (!@show_mg_shop_products)? shop_product.isc_product_id.to_s : ((@mg_product_list.select { |p| p["product_id"] == shop_product.isc_product_id.to_s }[0]["product_id"]) rescue '') %></td>
+	<td><%= shop_product.product.name %></td>
+	<td><%#= (Constant::MG_SITE_IDS.include?shop_product.site_id)? ((@mg_product_list.select { |p| p["product_id"] == shop_product.isc_product_id.to_s }[0]["name"]) rescue '') : (shop_product.isc_product.prodname rescue '') %>
+	  <%= (!@show_mg_shop_products)? (shop_product.isc_product.prodname rescue '') : ((@mg_product_list.select { |p| p["product_id"] == shop_product.isc_product_id.to_s }[0]["name"]) rescue '') %></td>
+	<td>
+		<span class="saved hide saved-<%= shop_product.id%>">Saved...</span>
+		<%= select_tag "def_supplier_id", options_for_select(suppliers, default_id), :class => "shop-product-suppleir-list", "data-id" => shop_product.id, "site-id" => params[:site_id] %>	
+	</td>
+	<td><%= shop_product.bundle_qty %></td>
+	<td><%= shop_product.product.show_expiry_date %></td>
+	<td>
+		<%= link_to raw("<i class='splashy-document_letter_edit'></i>"), editshop_product_path(shop_product), :remote => true, :title => "Edit" %> 
+		<%= link_to raw("<i class='icon-adt_trash'></i>"), deleteshop_product_path(shop_product), :confirm => "Are you sure you want to delete this record?", :method => :delete, :remote => true, :title => "Delete" %>
+	</td>
+</tr>

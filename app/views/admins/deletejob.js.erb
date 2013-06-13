@@ -1,0 +1,6 @@
+OC.clearForms();
+$("#loader").show();
+$.ajax({
+  url: "/admins/pendingjobs.js",
+  type: "get"
+});

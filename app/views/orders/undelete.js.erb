@@ -1,0 +1,7 @@
+$("#undeleted-<%= @order.orderid %>").remove();
+notes = $("#order_notes_<%= @order.orderid %>").val();
+if (notes != "") {
+	notes += "\n";
+}
+notes += "<%= params[:notes]%>";
+$("#order_notes_<%= @order.orderid %>").val(notes);

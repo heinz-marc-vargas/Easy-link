@@ -1,0 +1,53 @@
+ <div class="row-fluid">
+  <div class="span6">
+    <h3 class="heading">WS Total Sale Payments Collected In <%= @date.to_date.strftime("%B, %Y") %></h3>
+  </div>
+  
+  <div class="clear"></div> 
+  
+  <div class="span9">
+    <%= form_tag list_sale_totals_accounts_path, :class => "well form-inline sale-totals-search-form" do %>
+      Year-Month:
+      <%= select_tag "yr_month", options_for_select(@available_yr_mths, params[:yr_month]), :class => "span2"%>
+      <button type="submit" class="btn btn-success">Search</button>
+    <% end %>
+  </div>
+</div>
+ 
+<div class="row-fluid">
+  <table style="text-align: right;">
+    <tr>
+      <td><strong>Total Credit Card Payments:&nbsp;&nbsp;&nbsp;</strong></td>
+      <td><%= @ccsm_payment_total %></td>
+    </tr>
+    <tr>
+      <td><strong>Total Bank Transfer Payments:&nbsp;&nbsp;&nbsp;</strong></td>
+      <td><%= @bank_trxn_payment_total %></td>
+    </tr>
+    <tr style="border-top: solid 1px black;">
+      <td><strong>Grand Total:&nbsp;&nbsp;&nbsp;</strong></td>
+      <td><%= @payment_total %></td>
+    </tr>
+  </table>
+  <br/><br/>
+  <h4>Credit Card Transactions</h4>
+  <table>
+    <tr>
+      <td><strong><u>Order ID Entered</u></strong>&nbsp;&nbsp;&nbsp;</td>
+      <td style="text-align: right;"><strong><u>Amount</u></strong></td>
+    </tr>
+<%
+i = 0
+
+@ccsm_trxns.each do |trxn|
+%>
+    <tr>
+      <td><%= trxn.order_id %></td>
+      <td style="text-align: right;"><%= @amts[i] %></td>
+    </tr>
+<%
+  i += 1
+end
+%>
+  </table>
+</div>

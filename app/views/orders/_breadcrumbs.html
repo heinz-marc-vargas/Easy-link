@@ -1,0 +1,17 @@
+<ul class="breadcrumbs">
+	<li class="<%= ["Pending", ''].include?(params[:status].to_s) ? 'active' : '' %>"><%= link_to t('orders.pending'), orders_path(:status => "Pending"), :remote => true %></li>
+  <li class="<%= params[:status] == "Unpaid" ? 'active' : '' %>"><%= link_to t('orders.unpaid'), orders_path(:status => "Unpaid"), :remote => true %></li>
+  <li class="<%= params[:status] == "Paid" ? 'active' : '' %>"><%= link_to t('orders.paid'), orders_path(:status => "Paid"), :remote => true, :class => "paid-btn" %></li>
+  <li class="<%= params[:status] == "Submitted" ? 'active' : '' %>"><%= link_to t('orders.submitted'), orders_path(:status => "Submitted"), :remote => true %></li>
+  <li class="<%= params[:status] == "Partially Shipped" ? 'active' : '' %>"><%= link_to t('orders.part_submitted'), orders_path(:status => "Partially Shipped"), :remote => true %></li>
+  <li class="<%= params[:status] == "Shipped" ? 'active' : '' %>"><%= link_to t('orders.shipped'), orders_path(:status => "Shipped"), :remote => true %></li>
+</ul>
+
+<script>
+
+$(".paid-btn").live("click", function(){
+  $(this).removeAttr("href");
+  $(this).removeAttr("data-remote");
+});
+
+</script>

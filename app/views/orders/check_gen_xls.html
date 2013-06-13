@@ -1,0 +1,44 @@
+<div class="row-fluid">
+	<h3 class="heading">Check Missing from WM Ordering File: <%= @asset.name %></h3>
+	<br/>
+
+	<% if @missing_orders.empty? %>
+	  <h4 >No missing Orders</h4>
+	<% else %>
+		<div>
+			<h4 >Missing Orders</h4>
+			<br/>
+	
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Order ID</th>
+						<th>Product IDs</th>
+						<th>Product Qty</th>
+						<th>Site</th>
+						<th>Product String</th>
+					</tr>
+				</thead>			
+				
+				 <tbody>
+				 	<% cnt = 1
+				 	  @missing_orders.each do |row, product_code, qty| %>
+					  <tr>
+					  	<td><%= cnt %></td>
+					  	<td><%= row.order_id %> <%= "_#{row.split_flag}" unless row.split_flag.nil? %></td>
+					   	<td>&nbsp; <%= product_code %></td>
+					   	<td>&nbsp; <%= qty %></td>
+					   	<td>&nbsp; <%= row.site.sitename rescue '' %></td>
+					   	<td><%= row[:order_string][:order_params]["itemsString"] %></td>
+					  <tr>
+					  <% cnt += 1 %>
+					<% end %>
+				 </tbody>
+			</table>				
+			
+			
+			
+		</div>
+	<% end %> 
+</div>

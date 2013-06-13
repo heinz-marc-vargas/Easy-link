@@ -1,0 +1,17 @@
+<% unless @user.errors.empty?%>
+  html = '<div class="alert alert-error">';
+  html += "<a class='close' data-dismiss='alert'>×</a>";
+  <% @user.errors.values.each do |msg| %>
+  	html += "<%= msg.first %> <br/>";
+  <% end %>
+  html += '</div>';
+  $("#user-errors").empty();
+  $("#user-errors").append(html);  
+<% else %>
+	$("#edituser-form form")[0].reset();
+	$("#edituser-form").slideUp(300).delay(800).fadeOut(400);
+	$("#edituser-form").remove();
+	$.sticky("User <%= :successfully_updated%>.", {autoclose : 5000, position: "top-right", type: "st-success" });
+	OC.getUsers();
+	//oTableUsers.fnDraw();
+<% end%>

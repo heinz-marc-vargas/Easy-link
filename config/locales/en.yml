@@ -1,0 +1,174 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  mark_as_paid: "Mark as Paid"
+  order_not_found: "Order %{order_id} cannot be found."
+  invalid_url: "Invalid url provided."
+  invalid_site: "Invalid Site."
+  invalid_file: "Invalid File."
+  file_notexist: "File does not exist."
+  
+  
+  total: "Total"
+  messages:
+    title: "Messages"
+    no_messages: "You don't have messages yet..."
+  staff_portal: "Staff Portal"
+  help: "Help"
+  invoice:
+    title: "List Sales Invoice"
+  credit_card:
+    list_unmatched_payments: "List Unmatched SMCC Payments"
+  reports:
+    list_total_sale_payments: "Total Sale Payments Collected"
+  ordering: "Ordering"
+  import_stock_data: "Import Stock Data"
+  import_stock_threshold_data: "Import Stock Threshold Data"
+  sidebar_switch: "Sidebar switch"
+  hide_sidebar: "Hide Sidebar"
+  select_site: "Select a Site"
+  forms:
+    text: "Forms"
+    sava_form: "SAVA Communications Form"
+    wm_form: "Westmead Communications Form"
+  banktransactions: "Bank Transactions"
+  syst_env_status: "System Environment Status"
+  logout: "Log Out"
+  myprofile: "My Profile"
+  iscorders: "ISC Orders"
+  orders:
+    preview_supplier_data: "Preview Supplier Order Data"
+    missing_products: "Orders with missing products"
+    pending: "Pending"
+    unpaid: "Unpaid"
+    deleted: "Deleted"
+    paid: "Paid"
+    submitted: "Submitted"
+    part_submitted: "Partially Submitted"
+    shipped: "Shipped"
+    order_summary: "Order Summary"
+    check_duplicates: "Check Duplicates"
+    spreadsheets: "Spreadsheets"
+    import_shippings: "Import Shippings"
+    download_webshark_files: "Download YHVH files"
+    mark_pending: "Mark as Pending"
+    mark_unpaid: "Mark as Unpaid"
+    mark_paid: "Mark as Paid"
+    mark_submitted: "Mark as Submitted"
+    mark_part_shipped: "Mark as Partially Shipped"
+    mark_shipped: "Mark as Shipped"
+    mark_cancelled: "Mark as Canceled"
+    order_id: "Order ID"
+    customer_email: "Customer Email"
+    shipping_country: "Shipping Country"
+    order_date: "Order Date"
+    order_status: "Order Status"
+    payment_method: "Payment Method"
+    amount: "Amount"
+    actions: "Actions"
+  audit:
+    text: "Audit Log"
+    log: "Audit Log"
+  supplier_products:
+    text: "Supplier Products"
+  shop_products: 
+    text: "Shop Products"
+    lists: "Shop Products List"
+  isc_products:
+    text: "Cart Products"
+    lists: "Cart Products List"
+  accounts: "Accounts"
+  user_accts: "User Accounts"
+  sites: "Sites"
+  supplier: "Supplier"
+  suppliers: "Suppliers"
+  product: "Product"
+  isc_product: "Cart Product"
+  products:
+    text: "Products"
+    products_list: "Products List"
+    insert: "Insert Product"
+    add: "Add Supplier Product"
+    add_bundle: "Add Product / Bundle"
+    add_combi: "Add Combi Product"
+    new_cart_product: "Add WS Product"
+    ws_products_list: "WS Products List"
+  will_paginate:
+    previous_label: "« Previous"
+    next_label: "Next »"   
+  successfully_created: "successfully created"
+  successfully_updated: "successfully updated"
+  successfully_deleted: "successfully deleted"
+  successfully_enabled: "successfully enabled"
+  successfully_disabled: "successfully disabled"
+  errors:
+    product_not_selected: "Please select a product."
+    must_select_all_relevant_products: "Please select all relevant products."
+    must_select_more_than_one_product: "Please select more than 1 product."
+    must_be_different_products: "Please do not choose the same product."
+    need_bundle_qty: "Please fill in the quantity."
+    must_fill_in_all_bundle_qty: "Please fill in the relevant quantity fields."
+    need_sites: "Please choose at least 1 site."
+    need_different_supplier: "Product & Associated product cannot be from the same supplier"
+    need_product_name: "Product name cannot be blank."
+    need_product_sku: "Supplier Product ID / SKU cannot be blank."
+    need_product_supplier: "Please choose a supplier."
+    need_cart_product_id: "WS Product ID cannot be blank."
+    need_cart_product_name: "WS Product name cannot be blank."
+    need_cart_product_code: "WS Product code cannot be blank."
+    need_cart_site: "No site specified."
+
+  activerecord:
+    models:
+      shop_product: "Shop Product"
+      user: "User"
+    errors:
+      models:
+        shop_product:
+          attributes:
+            site_id:
+              blank: "Site cannot be empty."
+            supplier_id:
+              blank: "Supplier cannot be blank."
+            bundle_qty:
+              blank: "Quantity cannot be blank."
+            product_id:
+              blank: "Product cannot be blank."
+        user:
+          attributes:
+            email:
+              blank: "Email address cannot be blank."
+              invalid: "Email is invalid."
+              taken: "Email has already been taken."
+            password:
+              blank: "Password is required."
+              confirmation: "Password doesn't match confirmation"
+        site:
+          attributes:
+            name:
+              blank: "Site name cannot be blank."
+              taken: "Site name already taken."
+            code:
+              blank: "Code cannot be blank."
+            url:
+              blank: "URL cannot be blank."
+              invalid: "URL is invalid."
+              taken: "URL has already been taken."
+            hostname:
+              blank: "Hostname cannot be blank."
+        product:
+          attributes:
+            supplier_id:
+              blank: "Supplier can't be blank."
+            name:
+              blank: "Name can't be blank."
+              taken: "Name has already been taken."
+            ext_product_id:
+              blank: "Supplier Product ID can't be blank."
+              taken: "Supplier Product ID has already been taken."
+        supplier:
+          attributes:
+            name:
+              blank: "Supplier name can't be blank."
+              taken: "Name has already been taken."

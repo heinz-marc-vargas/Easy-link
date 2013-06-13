@@ -1,0 +1,47 @@
+<h3>Possible Duplicate Order Processings
+  <span style="font-size: 9px">(2 weeks range)</span>
+  <%= "Total: #{@dups_array.length}" if @dups_array.length > 0 %>
+</h3>
+
+<div id="duplicate-order-processings">
+
+  <% unless @dups_array.empty? %>
+  <table  style=" border: 1px solid #ccc; margin-bottom: 10px; line-height: 14px;" cellpadding="5" cellspacing="5" width="600">
+    <tr style="background-color: #D4D4D4">
+      <td>Order id</td>
+      <td>Status</td>
+      <td>Qty</td>        
+      <td>OrderProdId</td>
+      <td>Site ID</td>
+      <td>Product ID</td>
+      <td>Supplier ID</td>
+      <td>Date Created</td>
+    </tr>
+
+  
+  <% @dups_array.keys.each do |order_id| %>
+    <% ops = @dups_array[order_id] %>
+      <% ops.each do |op|%>
+      <% bg = op.created_at.to_date == Date.today ? "background-color: #F5FFFF" : "" %>
+        <tr style="<%= bg %>">
+          <td><%= order_id %></td>
+          <td><%= "sent=#{op.sent}" %></td>
+          <td><%= op.qty %></td>        
+          <td><%= op.orderprodid %></td>
+          <td><%= op.site_id %></td>
+          <td><%= op.product_id %></td>
+          <td><%= op.supplier_id %></td>
+          <td><%= op.created_at.strftime("%b %d, %Y") %></td>
+        </tr>
+      <% end %>
+
+      <tr style="height; 2px !important; ">
+        <td colspan=8 style="height: 0px; background-color: #ccc; margin-bottom: 1px !important"></td>
+      </tr>
+  <% end %>
+  </table>
+  
+  <% else %>
+    No duplicate order_processings found...
+  <% end %>
+</div>

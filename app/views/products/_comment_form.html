@@ -1,0 +1,6 @@
+<%= form_tag add_comment_product_path(object, :klass => params[:klass]), :class => "form-search comment-form", :remote => true, :method => :get do %>
+	<%= hidden_field_tag "klass", params[:klass] %>
+  <input type="text" name="comments" class="input-medium comment-form-field" style="height:14px !important;" placeholder="Type comments here..." autofocus required>
+  <button type="submit" class="btn btn-gebo">Submit</button>
+  <%= link_to "Cancel", "", :onclick => "return false;", :class => "cancel-btn-#{object.id}" %>
+<% end %>

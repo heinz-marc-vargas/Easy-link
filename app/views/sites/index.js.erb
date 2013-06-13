@@ -1,0 +1,11 @@
+OC.clearForms();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/sites/index", :locals => { :sites => @sites }))%>');
+
+$(function() {
+oTableSites = $('#dt_e').dataTable( {
+  "bProcessing": true,
+  "bServerSide": true,
+  "sPaginationType": "bootstrap",
+  "sAjaxSource": "/sites.json"
+} );
+});

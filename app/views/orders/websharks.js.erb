@@ -1,0 +1,22 @@
+OC.clearForms();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/orders/websharks"))%>');
+
+$(function() {
+	$('#shippingdate').datepicker();
+	$('#shippingdate2').datepicker();
+
+	$(".download-webshark-files-form").submit(function(){
+		var ans = confirm("Are you sure you want to download csv file for this dates?");
+		if (ans) {
+			$("#loader").show();
+			return true;
+		}else {
+			return false;
+		}
+	})
+})
+
+<% unless @success.nil? %>
+	$.sticky("A download request is now ongoing, please refresh the page to get the new downloaded files.", {autoclose : 10000, position: "top-right", type: "st-success" });
+<% end %>
+

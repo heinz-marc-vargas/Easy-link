@@ -1,0 +1,17 @@
+$("#user-errors").empty();
+<% unless @user.errors.empty?%>
+  html = '<div class="alert alert-error">';
+  html += "<a class='close' data-dismiss='alert'>×</a>";
+  <% @user.errors.values.each do |msg| %>
+  	html += "<%= msg.first %> <br/>";
+  <% end %>
+  html += '</div>';
+  $("#user-errors").empty();
+  $("#user-errors").append(html);  
+<% else %>
+	$("#adduser-form form")[0].reset();
+	$("#adduser-form").slideUp(300).delay(800).fadeOut(400);
+	$("#adduser-form").remove();
+	$.sticky("<%= :user.to_s.titleize%> <%= :successfully_created %>.", {autoclose : 5000, position: "top-right", type: "st-success" });
+	OC.getUsers();
+<% end%>

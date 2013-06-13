@@ -1,0 +1,11 @@
+$(".sidebar_info .paid").text("<%= @orders_totals[:paid]%>");
+$(".sidebar_info .submitted").text("<%= @orders_totals[:submitted]%>");
+$(".sidebar_info .shipped").text("<%= @orders_totals[:shipped]%>");
+$(".sidebar-site-default").text("<%= @site.sitename rescue '' %>");
+$("#loader_totals").hide();
+
+/*
+	$(".sidebar_info .sites").text("<%#= @total[:sites]%>");
+	$(".sidebar_info .users").text("<%#= @total[:users]%>");
+*/
+

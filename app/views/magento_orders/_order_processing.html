@@ -1,0 +1,43 @@
+<% puts ordproc.id %>
+<tr data-id="<%= ordproc.id  %>" id="order-product-row-<%= ordproc.id %>">	
+    <td width="100">
+    	<%= check_box_tag "chk_order_procid[]", ordproc.id, nil, :class => "order-proc-row" %>
+    	<%= ordproc.item_sku %></td>
+    <td width="100"><%= ordproc.product.name rescue ''  %></td>
+    <td width="100"><%= ordproc.item_name %></td>
+    <td width="100" style="text-align:center"><%= ordproc.qty %></td>
+    <td >
+    	<% if ordproc.parent_order_id.nil? %>
+    		<%= show_split_qty(ordproc) unless ordproc.qty.nil? %>
+    		<%= "_#{ordproc.split_flag}" unless ordproc.split_flag.nil? %>
+    		<%= span_loader2("split_qty_loader-#{ordproc.id}") %>
+    	<% end %>
+    </td>
+    <td >
+    	<% if ordproc.parent_order_id.nil? %>
+    		<%
+    		supp_options = []
+    		supp_ids = ordproc.supplier_ids.to_s.split(",")
+    		supp_ids.each do |supp_id|   			
+    			unless @suppliers_grp[supp_id.to_i].nil?
+    				supp = @suppliers_grp[supp_id.to_i].first
+    				supp_options << [supp.company_name, supp.id]
+    			end
+    		end
+    		
+    		if ordproc.combi_id.nil?
+    		%>
+    			<%= select_tag "supplier[]", options_for_select(supp_options, [ordproc.supplier_id]), 
+    						:class => "span2 select-height mage_select_supplier", 
+    						:id => ordproc.item_id, 
+    						"data-id" => ordproc.id, 
+    						:style => "font-size: 11px !important; height: 25px !important; width: 100px !important;" %>
+    			<span class="notes-<%= ordproc.id %>"></span>
+    			<%= span_loader2("select_supplier_loader-#{ordproc.item_id}") %>
+    			<%= span_loader2("change_supplier_loader-#{ordproc.id}") %>
+    	  <% end %>
+    	<% else %>
+    		<%= ordproc.supplier.company_name rescue '' %>
+    	<% end %>
+    </td>				                  
+</tr>

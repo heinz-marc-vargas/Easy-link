@@ -1,0 +1,4 @@
+$(".update-status").fadeOut('slow');
+<% if params[:status] == "processing" %>
+$(".update-status-success").delay(800).fadeIn('slow').delay(3500).fadeOut('slow');
+<% end %>

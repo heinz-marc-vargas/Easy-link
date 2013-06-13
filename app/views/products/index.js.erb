@@ -1,0 +1,25 @@
+OC.clearForms();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/products/index", :locals => { :products => @products }))%>');
+
+$(function() {
+
+	oTableProducts = $('#dt_products').dataTable( {
+	  "bProcessing": true,
+	  "bServerSide": true,
+	  "sPaginationType": "bootstrap",
+	  "sAjaxSource": "<%= products_path(:format => :json )%>",
+	  "iDisplayLength": 15,
+	  "aLengthMenu": [[15, 25, 50, 100], [15, 25, 50, 100]]
+	});
+
+
+$("#supplier_id").change( function() {
+  supplier_id = $("#supplier_id option:selected").val();
+
+  if (supplier_id == "")
+		oTableProducts.fnFilter('', 2);    
+  else
+  	fnFilterCol('#supplier_id', 2); 
+});
+
+});

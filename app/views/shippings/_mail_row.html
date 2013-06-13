@@ -1,0 +1,8 @@
+<tr style="background-color: #FAFAFA;">
+	<td><%= mail.site.sitecode %></td>
+	<td><%= mail.order_id %></td>
+	<td style="font-family:verdana !important; font-size: 11px; "><%= mail.email %></td>
+	<td><%= show_order_status(mail.isc_order.ordstatus) rescue '' %></td>
+	<td><%= mail.sent_at.strftime("%b %d, %Y %H:%I:%S %P") unless mail.sent_at.nil? %></td>
+	<td><%= mail.created_at.strftime("%b %d, %Y %H:%I:%S %P")  %></td>
+</tr>

@@ -1,0 +1,94 @@
+      <tr id="audit-object-row-<%= audit_record.id%>"  style="display:none;">
+        <td colspan="6">
+<%
+  audited_model = nil
+  if (audit_record.auditable_type == "Product")
+    audited_model = Product.find(audit_record.auditable_id)
+  elsif (audit_record.auditable_type == "ShopProduct")
+    audited_model = ShopProduct.find(audit_record.auditable_id)
+  elsif (audit_record.auditable_type == "User")
+    audited_model = User.find(audit_record.auditable_id)
+  elsif (audit_record.auditable_type == "IscOrderAddress")
+    parsed_site_id = audit_record.change_log.split("sites_id:")[1].split("'")[1].split("'")[0].to_i
+    logger.info("IscOrderAddress Site_id: " + parsed_site_id.to_s )
+    IscOrder.reconfigure_db(parsed_site_id)
+    audited_model =  IscOrderAddress.find(audit_record.auditable_id)
+  elsif (audit_record.auditable_type == "IscOrder")
+    parsed_site_id = audit_record.change_log.split("sites_id:")[1].split("'")[1].split("'")[0].to_i
+    logger.info("IscOrderAddress Site_id: " + parsed_site_id.to_s )
+    IscOrder.reconfigure_db(parsed_site_id)
+    audited_model =  IscOrder.find(audit_record.auditable_id)
+  end
+  
+  if (audited_model.respond_to?(:audits))
+    audits = (audited_model.audits || []).dup.sort{|a,b| b.created_at <=> a.created_at}
+    res = ''
+    
+    audits.each_with_index do |audit, index|
+      older_audit = audits[index + 1]
+      res += content_tag(:div, :class => 'audit') do
+        content_tag(:div, audit.action, :class => "action #{audit.action}") +
+        content_tag(:div, audit.username, :class => "user") + 
+        content_tag(:div, l(audit.created_at), :class => "timestamp") + 
+        content_tag(:div, :class => 'changes') do
+          changes = if older_audit.present?
+            if (audit.change_log.class == Hash)
+              audit.delta(older_audit).sort{|x,y| audited_model.class.human_attribute_name(x.first) <=> audited_model.class.human_attribute_name(y.first)}.collect do |k, v|                
+                next if k.to_s == 'created_at' || k.to_s == 'updated_at'
+                "\n" + 
+                audited_model.class.human_attribute_name(k) +
+                ":" +
+                content_tag(:span, v.last, :class => 'current') +
+                content_tag(:span, v.first, :class => 'previous')
+              end
+            else
+              aah = Audit.change_log_str_to_hash(audit)
+              aarr_m = aah[0]
+              ah = aah[1]
+              
+              if (older_audit == nil)
+                aarr_m.sort{|x,y| audited_model.class.human_attribute_name(x.first) <=> audited_model.class.human_attribute_name(y.first)}.collect do |k, v|                
+                  next if k.to_s == 'created_at' || k.to_s == 'updated_at'
+                  "\n" + 
+                  audited_model.class.human_attribute_name(k) +
+                  ":" +
+                  content_tag(:span, v.last, :class => 'current') +
+                  content_tag(:span, v.first, :class => 'previous')
+                end
+              else
+                aah_old = Audit.change_log_str_to_hash(older_audit)
+                aarr_m_old = aah_old[0]
+                ah_old = aah_old[1]
+                
+                Audit.delta(ah, ah_old).sort{|x,y| audited_model.class.human_attribute_name(x.first) <=> audited_model.class.human_attribute_name(y.first)}.collect do |k, v| 
+                  next if k.to_s == 'created_at' || k.to_s == 'updated_at'
+                  "\n" + 
+                  audited_model.class.human_attribute_name(k) +
+                  ":" +
+                  content_tag(:span, v.last, :class => 'current') +
+                  content_tag(:span, v.first, :class => 'previous')
+                end
+              end
+            end
+          else
+            logger.info("audit.change_log: " + audit.change_log.inspect)
+            if (audits[0].change_log.class == String)
+              audit.change_log.split("\n").collect {|x| ( "\n" + x.gsub(/  /, ""))}
+            else
+              (audit.change_log.sort{|x,y| audited_model.class.human_attribute_name(x.first) <=> audited_model.class.human_attribute_name(y.first)}.reject{|k, v| v.blank?}.collect {|k, v| "\n#{audited_model.class.human_attribute_name(k)}: #{v}"})
+            end
+          end
+          
+          raw changes.join
+        end        
+      end
+    end
+    logger.info ("RES: " + res.inspect)
+    logger.info("### SITE: " + Site.current_site.inspect)
+%>
+  <%= raw res %>
+<%
+  end
+%>
+        </td>
+      </tr>

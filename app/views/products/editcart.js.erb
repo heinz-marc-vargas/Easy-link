@@ -1,0 +1,7 @@
+OC.clearForms();
+$(".main_content").prepend('<%= escape_javascript(render(:partial => '/products/editcart'))%>');
+$("#editcartproduct-form").slideDown(300).delay(800).fadeIn(400);
+
+$('body,html').animate({
+	scrollTop: 0
+	}, 800);

@@ -1,0 +1,37 @@
+<h3 class="heading">Notes</h3>
+
+<ul>
+  <li>How to remove existing fragment cache:<br/>
+    In console:<br/>
+    rake cronjob:clean_fragment_cache
+  </li>
+</ul>
+
+<%= will_paginate @notes, :class => "dataTables_paginate paging_bootstrap pagination" %>
+
+	<table class="table table-condensed">
+  	<thead>
+  		<th></th>
+  	</thead>
+  	<tbody>
+  		<% @notes.each do |note| %>
+  		<tr>
+  			<td><%= note.contents %></td>
+  			<td><%= note.user_id %></td>
+  		</tr>
+  		<% end %>
+  	</tbody>
+	</table>
+	
+	<hr/>
+  <ul>
+    <li>Deleting / Changing Supplier Products for Shop Products<br/>
+      It is best not to delete supplier products due to existing orders using that product. Please consider (1) editing the SKU, or (2) swapping to the supplier product with the correct SKU first. (It is okay to have some discontinued/unused products in the supplier product records.)<br/>
+      If you choose to do (2), you'll need to:<br/>
+      - Create a supplier product with the SKU if it doesn't exist.<br/>
+      - Edit the ShopProduct. In the " Swap Product to" field select the product with the correct SKU.<br/><br/>
+      If you really have to delete the the supplier product, check that no shop product products are linked to it. If there are, you'll have to link those shop products to the correct existing supplier product.
+    </li>
+  </ul>
+  
+<%= will_paginate @notes, :class => "dataTables_paginate paging_bootstrap pagination" %>

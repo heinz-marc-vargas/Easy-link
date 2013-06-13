@@ -1,0 +1,16 @@
+
+<%= form_tag products_path, :remote => true, :method => :get do %>
+<div class="row-fluid">
+	<div class="span7">
+		<div class="input-append">
+			<select name="supplier_id" id="supplier_id">
+				<option value="">Showing All Suppliers</option>
+				<% @suppliers.each do |supp|%>
+				<option value="<%= supp.id%>" <%= params[:supplier_id].to_i == supp.id ? "selected" : '' %>><%= supp.company_name %></option>
+				<% end %>
+			</select> 
+		</div>
+	</div>	
+</div>
+			
+<% end %>

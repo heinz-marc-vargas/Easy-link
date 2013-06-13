@@ -1,0 +1,54 @@
+<tr id="order-row-<%= order.orderid%>">
+	<td><%= order.orderid %></td>
+	<td><%= order.isc_customer.custconfirstname rescue "N/A" %></td>
+	<td><%= order.isc_customer.custconemail rescue "N/A" %></td>
+	<td><%= order.order_date rescue "N/A" %></td>
+	<td title="<%= show_order_status(order.ordstatus) %>"><%= @statuses[order.ordstatus] rescue "N/A" %></td>
+	<td><%= show_payment_image(order) %></td>
+	<td><%= commify(order.total_inc_tax.to_i.to_s) %></td>
+</tr>
+
+<tr id="order-row-details-<%= order.orderid%>" class="" style="border-right: none !important;" align="center">
+	<td colspan="9" style="background-color: none; padding: 0px 10px 10px 10px !important; border:0px; border-left: none !important; border-right-width: 0px !important; border-right-style: none !important;" align="center">
+		<div id="order-content-<%= order.orderid %>" class="subtable-container"  >
+			<strong>Items Ordered:</strong>
+			<ul class="unstyled">
+			<% order.isc_order_products.each do |ordprod| %>
+				<li style="padding-left: 12px;">
+					 <strong>Product SKU:</strong> <%= ordprod.ordprodsku %> <%= space(4) %> | <%= space(4) %>
+					 <strong>Product name: </strong><%= ordprod.ordprodname %> <%= (ordprod.product_variation != "")? ("( " + ordprod.product_variation + " )") : "" %> <%= space(4) %> | <%= space(4) %> 
+					 <strong>Ordered Quantity:</strong> <%= ordprod.ordprodqty %>
+				</li>
+			<% end %>
+			</ul>
+			
+			<strong>Shipping Address</strong>
+			<p><%= convert_multi_to_single_byte_alpha_num(order.isc_order_address.complete_address) rescue '' %></p>
+			<strong>Billing Address</strong>
+			<p>
+				<%= convert_multi_to_single_byte_alpha_num(order.isc_customer.custconfirstname + " " + order.isc_customer.custconlastname) rescue "N/A" %>  
+		    <%= convert_multi_to_single_byte_alpha_num(order.ordbillstreet1) rescue "N/A" %> <%= convert_multi_to_single_byte_alpha_num(order.ordbillstreet2) rescue "N/A" %>  
+		    <%= "#{order.ordbillsuburb}, #{order.ordbillstate}, #{order.ordbillzip  } " rescue "N/A" %> <%= order.ordbillcountrycode %>
+			</p>
+
+
+      <% unless order.isc_shipment_datas.empty? %>
+        <strong>Shipment Data: </strong>
+        <br/>
+        <ul class="unstyled">
+					<% order.isc_shipment_datas.each do |shipment| %>
+					<li>
+		        <strong>Product Code:</strong> <%= shipment.ext_product_id %> <%= space(4) %> | <%= space(4) %>
+		        <strong>Shipped Qty:</strong> <%= shipment.qty_shipped %> <%= space(4) %> | <%= space(4) %>
+		        <strong>Ship Date:</strong> <%= format_date(shipment.ship_date, 'MdY') %>     <%= space(4) %> | <%= space(4) %>
+		        <strong>Tracking Number:</strong> <%= shipment.tracking_num %>    <%= space(4) %> | <%= space(4) %>
+	   				<strong>Uploaded On:</strong> <%= format_date(shipment.created_at, 'MdY-time') %>
+        	</li>
+				<% end %>
+				</ul>
+			<% end %>
+			
+
+		</div>
+	</td>
+</tr>

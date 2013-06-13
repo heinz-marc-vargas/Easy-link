@@ -1,0 +1,67 @@
+<%= render("/orders/breadcrumbs", :status => "Pending") %>
+
+
+
+<div class="row-fluid">
+	<div class="span4">
+		<h4 class="heading">Shipping Notifications</h4>
+	</div>
+	<%= render("/orders/sublinks") %>
+	
+	<div class="span4">
+		<a href="#" onclick="OC.showShippingNotifications(); return false;"><i class="icon-th"></i>Shipping Notifications</a>
+	</div>
+</div>
+
+<h4>
+Note: An email is automatically sent during the uploading of shipping numbers ( xls files)
+</h4>
+
+<!--
+<% unless @isds.empty? %>
+<div class="row-fluid">
+	<h4>Today's Uploaded Shipping Files:</h4><br/>
+	
+	<%= form_tag send_notification_shippings_path, :id => "send-notification-form", :remote => true  do %>
+		<ul class="unstyled">
+			<% @isds_grouped.each do |key, values| %>
+				<li>
+					<label class="checkbox">
+						<% if !@mail_noti_count.include? key %>
+							<%= check_box_tag "isd[]", values.first.id %>
+						<% end %>
+						<%= h key %>
+						
+						<% if @mail_noti_count.include? key %>
+							<%= link_to "Show Logs", show_logs_shippings_path(:isd => values.first.id), :remote => true %>
+						<% end %>
+					</label>
+					
+					<div class="hide mail-notifications" id="mail-notifications-<%= values.first.id %>"></div>
+				</li>
+			<% end %>
+		</ul>
+		<%= submit_tag "Send Notification For Orders In Selected Files", :class => "btn small-btn" %>
+	<% end %>
+</div>
+<% else %>
+	<h4>There no uploaded files today..</h4>
+<% end %>
+
+<script>
+$(function() {
+	$(".mail-notifications .close").live('click', function() {
+		var id = $(this).attr("data-id");
+		$("#mail-notifications-" + id).empty().hide();
+	});
+
+	$("send-notification-form").submit(function(){
+		if ( $("#send-notification-form input[type=checkbox]:checked").length > 0 ){
+			$("#loader").show();
+		}else{
+			return false;
+		}
+	})
+})	
+</script>
+-->

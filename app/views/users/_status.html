@@ -1,0 +1,5 @@
+<% if user.access_locked? %>
+	<%= link_to raw("<i class='splashy-contact_grey'></i>"), unlock_user_path(user), :confirm => "Are you sure you want to enable this user?", :remote => true, :title => "Disabled" %>
+<% else %>
+	<%= link_to raw("<i class='splashy-contact_blue'></i>"), lock_user_path(user), :confirm => "Are you sure you want to disable this user?", :remote => true, :title => "Enabled" %>
+<% end %>

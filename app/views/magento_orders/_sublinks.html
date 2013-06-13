@@ -1,0 +1,16 @@
+	<div class="span7">
+		<a href="javascript:;" onclick="OC.showOrderSummary(); return false;"><i class="icon-th"></i><%= t('orders.order_summary') %></a>
+		<%= space_pipe %>
+		<a href="javascript:;" onclick="OC.checkOrderDuplicate(); return false;"><i class="icon-th"></i><%= t('orders.check_duplicates') %></a>
+		<%= space_pipe %>
+		<a href="javascript:;" onclick="OC.showOrderSpreadsheets(); return false;"><i class="icon-th"></i><%= t('orders.spreadsheets') %></a>
+		<%= space_pipe %>
+		<a href="javascript:;" onclick="OC.showImports(); return false;"><i class="icon-th"></i><%= t('orders.import_shippings') %></a>
+		
+		
+		<% if Rails.env == "development" && session[:site_code].to_s == "WSH" %>
+			<%= space_pipe %>
+			<a href="/orders/websharks.js" data-remote="true"><i class="icon-th"></i><%= t('orders.download_webshark_files') %></a>
+		<% end %> 		
+	</div>
+	

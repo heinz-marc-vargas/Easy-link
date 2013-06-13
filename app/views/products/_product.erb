@@ -1,0 +1,10 @@
+			<tr id="product-row-<%= product.id%>">
+				<td><%= product.name %></td>
+				<td><%= product.ext_product_id %></td>
+				<td><%= product.supplier.company_name %></td>
+				<td>
+					<%= link_to raw("<i class='splashy-document_letter_edit'></i>"), edit_product_path(product), :remote => true, :title => "Edit" %> 
+					<%= link_to raw("<i class='icon-adt_trash'></i>"), product_path(product), :confirm => "Are you sure you want to delete this record?", :method => :delete, :remote => true, :title => "Delete" %>
+				</td>
+			</tr>
+			

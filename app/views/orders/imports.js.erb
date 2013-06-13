@@ -1,0 +1,8 @@
+OC.clearForms();
+$(".main_content").empty().append('<%= escape_javascript(render(:partial => "/orders/imports"))%>');
+
+<% unless @success.nil? %>
+  <% if @success %>
+$.sticky("Shipping Numbers uploaded successfully.", {autoclose : 5000, position: "top-right", type: "st-success" });
+  <% end %>
+<% end %>

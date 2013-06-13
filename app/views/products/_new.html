@@ -1,0 +1,18 @@
+<% unless @product.errors.empty?%>
+	<div class="alert alert-error">
+	<% @product.errors.keys.each do |k| %>
+		<a class="close" data-dismiss="alert">×</a>
+		<%= k.to_s.capitalize %> <%= @products.errors[k].first %> <br/>
+	<% end %>
+	</div>
+<% end%>
+
+<div id="addproduct-form" class="">
+	<div id="product-errors"></div>
+	<div class="row-fluid">
+		<div class="span10">
+			<h3 class="heading">Add Supplier Product</h3>
+	    <%= render :partial => "form" %>	
+		</div>
+	</div>
+</div>

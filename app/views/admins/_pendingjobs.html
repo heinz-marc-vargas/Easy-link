@@ -1,0 +1,41 @@
+<h3 class="heading">List of Pending/Failed jobs <%= "(#{@jobs.total_entries})" unless @jobs.empty? %></h3>
+
+<%= "No pending/failed jobs found." if @jobs.empty? %>
+
+<%= will_paginate @jobs, :class => "dataTables_paginate paging_bootstrap pagination" %>
+
+
+<div class="accordion" id="accordion2">
+	<% @jobs.each do |job| %>
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse<%= job.id %>">
+        ID: <%= job.id %> |
+        <%= job.handler.object.to_s %>.<%= job.handler.method_name.to_s %> 
+        <%= space(5) %>
+        Queue name: <%= job.queue %>
+        <%= space(5) %>
+        <%= format_date(job.created_at, "MdY-time") %>
+        <% unless job.last_error.blank? %>
+        <span class="pull-right red">FAILED</span>
+        <% end %> 
+        
+      </a>
+    </div>
+    <div id="collapse<%= job.id %>" class="accordion-body collapse">
+      <div class="accordion-inner">
+	<span class="pull-right">  		<%= link_to "Delete this job", deletejob_admin_path(job), :remote => true, :confirm => "Are you sure you want to delete this?", :class => "btn btn-danger" %> </span>
+        <%= job.handler.args.inspect %> <br/>
+        <%= job.last_error.to_s %> <br/>
+        <%= format_date(job.run_at, "MdY-time") %> <br/>
+	  		<%= format_date(job.failed_at, "MdY-time") %> <br/>
+	  		<%= format_date(job.locked_at, "MdY-time") %> <br/>
+      </div>
+    </div>
+  </div>
+  
+  <% end %>
+</div>
+
+
+<%= will_paginate @jobs, :class => "dataTables_paginate paging_bootstrap pagination" %>

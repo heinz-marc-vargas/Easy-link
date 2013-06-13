@@ -1,0 +1,12 @@
+OC.clearForms();
+$(".main_content").prepend('<%= escape_javascript(render(:partial => '/products/edit'))%>');
+$("#editproduct-form").slideDown(300).delay(800).fadeIn(400);
+$(".chzn_a, .chzn_b").chosen({
+	allow_single_deselect: true
+});
+
+
+
+$('body,html').animate({
+	scrollTop: 0
+	}, 800);

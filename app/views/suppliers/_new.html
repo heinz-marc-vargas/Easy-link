@@ -1,0 +1,18 @@
+<% unless @supplier.errors.empty?%>
+	<div class="alert alert-error">
+	<% @supplier.errors.keys.each do |k| %>
+		<a class="close" data-dismiss="alert">×</a>
+		<%= k.to_s.capitalize %> <%= @supplier.errors[k].first %> <br/>
+	<% end %>
+	</div>
+<% end%>
+
+<div id="addsupplier-form" class="">
+	<div id="supplier-errors"></div>
+	<div class="row-fluid">
+		<div class="span6">
+			<h3 class="heading">Add new supplier</h3>
+	    <%= render :partial => "form" %>	
+		</div>
+	</div>
+</div>

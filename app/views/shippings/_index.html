@@ -1,0 +1,92 @@
+<h3 class="heading">Emails </h3>
+<br/>
+
+<%= form_tag shippings_path, :remote => true, :method => :get, :id => "mail-list-form" do %>
+<div class="row-fluid">
+	<div class="span12">
+		<div class="input-append">
+			Site :
+			<select name="site_id" class="span2">
+			<% current_user.sites.each do |site|%>
+				<option value="<%= site.id%>" <%= session[:site_id].to_i == site.id ? "selected" : '' %>><%= site.sitename %></option>
+			<% end %>
+			</select>
+			Type :
+			<select name="type" class="" style="width:100px">
+				<option value="unsent" <%= params[:type] == "unsent" ? "selected" : '' %>>Unsent mail</option>
+				<option value="sent" <%= params[:type] == "sent" ? "selected" : '' %>>Sent mail</option>
+			</select>
+
+
+			<input type="text" name="q" size="16" value="<%= params[:q] rescue ''%>" class="span2"  placeholder="Order ID">
+			<button type="submit" class="btn btn-success">Search</button>
+		</div>
+	</div>
+</div>
+<% end %>
+
+<%= "No emails not sent" if @unsent_mails.empty? %>
+<br/>
+<% unless @unsent_mails.empty? %>
+<h4>Emails not sent </h4>
+<div class="row-fluid">
+	<div class="span8">
+	<table class="table table-bordered mediaTable" id="sites-list">
+		<thead>
+			<tr>
+				<th class="essential persist">Site</th>
+				<th class="optional">Order ID</th>
+				<th class="optional">Email</th>
+				<th class="optional">Order Status</th>
+				<th class="essential">Date Sent</th>
+				<th class="essential">Date created</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @unsent_mails.each do |mail| %>
+				<%= render "mail_row", :mail => mail %>
+			<% end %>
+		</tbody>
+	</table>
+  <%= will_paginate @unsent_mails, :params =>  { :type => 'unsent', :site_id => @site_id }, :class => "dataTables_paginate paging_bootstrap pagination" %>
+  </div>
+</div>
+
+<% end %>
+<%= "No emails sent" if @mails.empty? %>
+
+
+<% unless @mails.empty? %>
+<h4>Emails sent </h4>
+<div class="row-fluid">
+	<div class="span8">
+		<table class="table table-bordered mediaTable" id="sites-list">
+			<thead>
+				<tr>
+					<th class="essential persist">Site</th>
+					<th class="optional">Order ID</th>
+					<th class="optional">Email</th>
+					<th class="optional">Order Status</th>
+					<th class="essential">Date Sent</th>
+					<th class="essential">Date created</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @mails.each do |mail| %>
+					<%= render "mail_row", :mail => mail %>
+				<% end %>
+			</tbody>
+		</table>
+	  <%= will_paginate @mails, :params =>  { :type => 'sent', :site_id => @site_id }, :class => "dataTables_paginate paging_bootstrap pagination" %>
+	</div>
+</div>
+<% end %>
+
+<script>
+$(function() {
+	$("#mail-list-form").submit(function(){
+		$("#loader").show();
+	})
+	
+});
+</script>
